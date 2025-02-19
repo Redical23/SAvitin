@@ -1,10 +1,12 @@
+// app/api/socket/route.js
 import { Server } from "socket.io";
 import { NextResponse } from "next/server";
 
 if (!global.io) {
   console.log("Initializing Socket.IO server...");
 
-  const io = new Server(3001, {
+  // Create the Socket.IO server *without* a separate port
+  const io = new Server({
     cors: {
       origin: "*",
       methods: ["GET", "POST"],
@@ -21,7 +23,7 @@ if (!global.io) {
 
     socket.on("send_message", (data) => {
       console.log("📤 Message received from client:", data);
-      io.to(data.room).emit("receive_message", data); // Broadcast to the correct room
+      io.to(data.room).emit("receive_message", data);
     });
 
     socket.on("disconnect", () => {
