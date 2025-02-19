@@ -10,7 +10,9 @@ export async function middleware(req) {
   if (
     pathname.startsWith('/api/') || // Exclude /api/ paths
     pathname === '/' ||
-    pathname === '/login' ||
+    pathname === '/Login' ||
+    pathname === '/Register' ||
+    pathname === '/about' ||
     pathname.startsWith('/_next') ||
     pathname.endsWith('.css')
   ) {

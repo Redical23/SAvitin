@@ -1,105 +1,124 @@
-"use client";
-import { useState, useEffect } from "react";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { useModelContext } from "../../context/Context";
+"use client"
+
+import { useState, useEffect } from "react"
+import Image from "next/image"
+import { useRouter } from "next/navigation"
+import { useModelContext } from "../../context/Context"
+import { motion, AnimatePresence } from "framer-motion"
+import LAHEAD from "../../slidebar/LAHEAD"
+import Footer from "../../slidebar/FOOTER"
 
 export default function BookmarkPage() {
-  const { email } = useModelContext(); // Get email from Context
-  const [user, setUser] = useState(null);
-  const [bookmarks, setBookmarks] = useState([]);
-  const [error, setError] = useState(null);
-  const decodedEmail = email ? decodeURIComponent(email) : null;
-  const router = useRouter();
+  const { email } = useModelContext()
+  const [user, setUser] = useState(null)
+  const [bookmarks, setBookmarks] = useState([])
+  const [error, setError] = useState(null)
+  const decodedEmail = email ? decodeURIComponent(email) : null
+  const router = useRouter()
 
   useEffect(() => {
-    // Fetch user data by email
     const fetchUserData = async () => {
-      if (!decodedEmail) return;
-      
+      if (!decodedEmail) return
+
       try {
-        const res = await fetch(`/api/users?email=${decodedEmail}`);
-        const data = await res.json();
-
-        if (!res.ok) throw new Error(data.error || "Failed to fetch user data");
-
-        setUser(data);
+        const res = await fetch(`/api/users?email=${decodedEmail}`)
+        const data = await res.json()
+        if (!res.ok) throw new Error(data.error || "Failed to fetch user data")
+        setUser(data)
       } catch (error) {
-        console.error("❌ Error fetching user:", error.message);
-        setError(error.message);
+        console.error("Error fetching user:", error.message)
+        setError(error.message)
       }
-    };
+    }
 
-    fetchUserData();
-  }, [decodedEmail]);
+    fetchUserData()
+  }, [decodedEmail])
 
   useEffect(() => {
-    // Fetch bookmarked articles
     const fetchBookmarks = async () => {
-      if (!user?.bookmarks || user.bookmarks.length === 0) return;
+      if (!user?.bookmarks || user.bookmarks.length === 0) return
 
       try {
-        const ids = user.bookmarks.join(",");
-        console.log("📢 Fetching news for IDs:", ids);
-        
-        const res = await fetch(`/api/bookmark?ids=${ids}`);
-        const data = await res.json();
-
-        if (!res.ok) throw new Error(data.error || "Failed to fetch bookmarks");
-
-        // ✅ Ensure unique bookmarks
-        const uniqueBookmarks = [...new Map(data.map((item) => [item._id, item])).values()];
-        console.log("✅ Filtered Unique News:", uniqueBookmarks.map(n => n._id));
-
-        setBookmarks(uniqueBookmarks);
+        const ids = user.bookmarks.join(",")
+        const res = await fetch(`/api/bookmark?ids=${ids}`)
+        const data = await res.json()
+        if (!res.ok) throw new Error(data.error || "Failed to fetch bookmarks")
+        const uniqueBookmarks = [...new Map(data.map((item) => [item._id, item])).values()]
+        setBookmarks(uniqueBookmarks)
       } catch (error) {
-        console.error("❌ Error fetching bookmarks:", error.message);
-        setError(error.message);
+        console.error("Error fetching bookmarks:", error.message)
+        setError(error.message)
       }
-    };
+    }
 
-    fetchBookmarks();
-  }, [user]);
+    fetchBookmarks()
+  }, [user])
 
   if (error) {
-    return <div className="text-red-500 p-4">Error: {error}</div>;
+    return (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="flex items-center justify-center min-h-screen bg-gradient-to-b from-[#020B2C] to-[#0D1B4A]"
+      >
+        <div className="text-red-500 p-8 bg-white/10 rounded-lg backdrop-blur-md">{error}</div>
+      </motion.div>
+    )
   }
 
   if (!user || bookmarks.length === 0) {
-    return <div className="text-white p-4">Loading or No Bookmarks...</div>;
+    return (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="flex items-center justify-center min-h-screen bg-gradient-to-b from-[#020B2C] to-[#0D1B4A]"
+      >
+        <div className="text-white/80 p-8 bg-white/10 rounded-lg backdrop-blur-md">
+          {!user ? "Loading..." : "No bookmarks found"}
+        </div>
+      </motion.div>
+    )
   }
 
   return (
-    <div className="min-h-screen bg-[#020B2C] text-white py-8">
-      <div className="max-w-7xl mx-auto px-4">
-        <h1 className="text-3xl font-bold mb-6 text-white">Your Bookmarked News</h1>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {bookmarks.map((news) => (
-            <div 
-              key={news._id} 
-              className="bg-white/5 backdrop-blur rounded-xl overflow-hidden cursor-pointer transition-transform transform hover:scale-105"
-              onClick={() => {
-                console.log("Navigating to:", news._id);
-                router.push(`/newsid/${news._id}`);
-              }}
-            >
-              <div className="relative h-[250px] w-full">
-                <Image 
-                  src={news.image || "/placeholder.svg"} 
-                  alt={news.headline} 
-                  fill 
-                  className="object-cover"
-                />
-              </div>
-              <div className="p-6">
-                <h2 className="text-xl font-semibold text-white">{news.headline}</h2>
-                <p className="text-gray-300 mt-2">{news.description}</p>
-                <p className="text-gray-400 text-sm mt-2">🆔 ID: {news._id}</p>
-              </div>
-            </div>
-          ))}
+    <div className="min-h-screen bg-gradient-to-b from-[#020B2C] to-[#0D1B4A]">
+      <LAHEAD />
+      <div className="container flex-col mx-auto px-4 py-12">
+        <motion.h1
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-4xl font-bold mb-8 text-white"
+        >
+          Your Bookmarks
+        </motion.h1>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <AnimatePresence>
+            {bookmarks.map((news, index) => (
+              <motion.div
+                key={news._id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ delay: index * 0.1 }}
+                whileHover={{ scale: 1.03 }}
+                className="bg-white/10 backdrop-blur-md rounded-xl overflow-hidden cursor-pointer transform transition-all"
+                onClick={() => router.push(`/newsid/${news._id}`)}
+              >
+                <div className="relative h-[200px] w-full">
+                  <Image src={news.image || "/placeholder.svg"} alt={news.headline} layout="fill" objectFit="cover" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                </div>
+                <div className="p-6">
+                  <h2 className="text-xl font-semibold text-white mb-2">{news.headline}</h2>
+                  <p className="text-gray-300 line-clamp-2">{news.description}</p>
+                </div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
         </div>
       </div>
+      <Footer />
     </div>
-  );
+  )
 }
+

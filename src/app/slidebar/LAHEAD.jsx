@@ -1,105 +1,105 @@
 "use client";
-import React from 'react';
-import { useRouter } from 'next/navigation';
-import { useState, useEffect } from 'react';
-import Navigation from './Navigation';
-import SearchBar from './SearchBarA';
-import { useModelContext } from '../context/Context';
-import { Menu, X } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
+import Navigation from "./Navigation";
+import SearchBar from "./SearchBarA";
+import { useModelContext } from "../context/Context";
+import { Menu, X } from "lucide-react";
 
 const LAHEAD = () => {
   const router = useRouter();
   const [user, setUser] = useState(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { isModelOpen, setIsModelOpen, email, updateAvtarURL, useravatar } = useModelContext();
+  const { isModelOpen, setIsModelOpen, email } = useModelContext();
+  const pathname = usePathname();
 
-  const handleAvatarClick = () => {
-    setIsModelOpen(!isModelOpen);
-  };
+  const handleAvatarClick = () => setIsModelOpen(!isModelOpen);
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
-
-  const decodedEmail = email;
-  
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const res = await fetch(`/api/users?email=${decodedEmail}`);
+        const res = await fetch(`/api/users?email=${email}`);
         const data = await res.json();
-
-        if (res.ok) {
-          setUser(data);
-        } else {
-          console.error("Error fetching user:", data.error);
-        }
+        if (res.ok) setUser(data);
+        else console.error("Error fetching user:", data.error);
       } catch (error) {
         console.error("Failed to fetch user data:", error);
       }
     };
-
-    if (email) {
-      fetchUserData();
-    }
+    if (email) fetchUserData();
   }, [email]);
 
   return (
-    <header className="bg-[#001c5e] shadow-lg">
-      <div className="container mx-auto px-4 py-4">
-        <div className="flex gap-6 items-center justify-between">
-          <a href="/lawyer" className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 text-transparent bg-clip-text">
-            PROPER AID
-          </a>
-          <div className="hidden md:flex items-center space-x-6">
-            <Navigation />
-            <SearchBar />
-            <button className="w-10 h-10 rounded-full overflow-hidden focus:outline-none focus:ring-2 focus:ring-blue-400">
+    <header className="bg-gradient-to-r from-[#1E293B] via-[#0F172A] to-[#1E3A8A] text-white shadow-lg py-3">
+      <div className="container mx-auto px-6 flex items-center justify-between">
+        {/* Logo */}
+        <a href="/lawyer" className="text-3xl font-extrabold text-[#FFB400]">
+          PROPER AID
+        </a>
+
+        {/* Desktop Navigation */}
+        <div className="hidden md:flex items-center space-x-8">
+          <Navigation />
+          {pathname !== "/Constitustion" && <SearchBar />}
+
+          {/* Avatar & Buttons */}
+          <div className="flex items-center space-x-5">
+            <button
+              className="w-12 h-12 rounded-full overflow-hidden border-2 border-[#FFB400] shadow-md hover:shadow-lg transition-all"
+              onClick={handleAvatarClick}
+            >
               <img src={user?.avatar || "/default-avatar.png"} alt="User avatar" className="w-full h-full object-cover" />
             </button>
             <button
-             onClick={() => router.push("/pruser/setting")}
-              className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors font-semibold"
+              onClick={() => router.push("/pruser/setting")}
+              className="px-5 py-2 bg-[#FFB400] text-[#1B1F3B] rounded-lg font-semibold shadow-md hover:bg-[#E6A200] transition-all"
             >
               Settings
             </button>
             <button
               onClick={() => router.push("/pruser/profile")}
-              className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors font-semibold"
+              className="px-5 py-2 bg-[#E63946] text-white rounded-lg font-semibold shadow-md hover:bg-[#C82D3A] transition-all"
             >
               Profile
             </button>
           </div>
-          <button className="md:hidden text-white" onClick={toggleMenu}>
-            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
         </div>
-        {isMenuOpen && (
-          <div className="mt-4 md:hidden">
-            <Navigation />
-            <div className="mt-4">
-              <SearchBar />
-            </div>
-            <div className="mt-4 flex items-center justify-between">
-              <button className="w-10 h-10 rounded-full overflow-hidden focus:outline-none focus:ring-2 focus:ring-blue-400">
-                <img src={user?.avatar || "/default-avatar.png"} alt="User avatar" className="w-full h-full object-cover" />
-              </button>
-              <button
-                 onClick={() => router.push("/pruser/setting")}
-                className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors font-semibold"
-              >
-                Settings
-              </button>
-              <button
-                onClick={() => router.push("/profile")}
-                className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors font-semibold"
-              >
-                Profile
-              </button>
-            </div>
-          </div>
-        )}
+
+        {/* Mobile Menu Button */}
+        <button className="md:hidden text-white" onClick={toggleMenu}>
+          {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
+        </button>
       </div>
+
+      {/* Mobile Menu */}
+      {isMenuOpen && (
+        <div className="mt-4 md:hidden bg-gradient-to-r from-[#1E293B] via-[#0F172A] to-[#1E3A8A] p-6 rounded-lg shadow-lg">
+          <Navigation />
+          {pathname !== "/Constitustion" && <SearchBar />}
+          <div className="mt-5 flex flex-col space-y-4">
+            <button
+              className="w-12 h-12 rounded-full overflow-hidden border-2 border-[#FFB400] shadow-md"
+              onClick={handleAvatarClick}
+            >
+              <img src={user?.avatar || "/default-avatar.png"} alt="User avatar" className="w-full h-full object-cover" />
+            </button>
+            <button
+              onClick={() => router.push("/pruser/setting")}
+              className="px-5 py-2 bg-[#FFB400] text-[#1B1F3B] rounded-lg font-semibold shadow-md hover:bg-[#E6A200] transition-all"
+            >
+              Settings
+            </button>
+            <button
+              onClick={() => router.push("/pruser/profile")}
+              className="px-5 py-2 bg-[#E63946] text-white rounded-lg font-semibold shadow-md hover:bg-[#C82D3A] transition-all"
+            >
+              Profile
+            </button>
+          </div>
+        </div>
+      )}
     </header>
   );
 };

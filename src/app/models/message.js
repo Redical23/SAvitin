@@ -10,6 +10,8 @@ const MessageSchema = new mongoose.Schema({
 const ConversationSchema = new mongoose.Schema(
   {
     participants: { type: [String], required: true },
+    avatar: { type: String, default: "/images/default-avatar.png" },  // Added avatar field with default value
+    username: { type: String, default: "Client" }, // Added username field with default value
     messages: [MessageSchema],
   },
   { timestamps: true }

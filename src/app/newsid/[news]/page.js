@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { RelatedArticle } from '../../slidebar/RelatedArticleProps';
 import ShareBookmarkButtons from "../../slidebar/ShareBookmarkButtons"
+import Footer from '../../slidebar/FOOTER';
 async function getUserData(id) {
   const client = await MongoClient.connect(process.env.MONGODB_URI);
   const db = client.db();
@@ -141,6 +142,7 @@ console.log(news,"toyou")
         </article>
       </div>
     </div>
+     <Footer />
             </div>
   );
 }

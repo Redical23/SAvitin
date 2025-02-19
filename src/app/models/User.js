@@ -59,9 +59,12 @@ const UserSchema = new mongoose.Schema(
     },
     charge: { type: Number, default: 0 },
     yearsexp: { type: Number, default: 0 },
+    subscribe: { type: Boolean, default: false },
+    subscriptionExpiry: { type: Date, default: null },
     resetPasswordToken: { type: String },
     notificationsEnabled: { type: Boolean, default: true },
     resetPasswordExpires: { type: Date },
+    admin: { type: Boolean, default: false } 
   },
   { timestamps: true }
 );

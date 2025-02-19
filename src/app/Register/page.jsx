@@ -167,6 +167,7 @@ const Register = () => {
             >
               Sign in
             </button>
+            By clicking Register, you agree to the Terms and Conditions & Privacy Policy of Naukri.com
           </div>
         </div>
       </div>

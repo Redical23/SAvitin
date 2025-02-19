@@ -1,72 +1,120 @@
-// pages/index.js or pages/news.js
 "use client"
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import LAHEAD from '../slidebar/LAHEAD';
-import NEWSTEMP from '../templates/NEWSTEMP'
-import { useState } from 'react';
-import FeaturedArticle from '../slidebar/featured-articale'
-import { useEffect } from 'react';
+import NEWSTEMP from '../templates/NEWSTEMP';
+import FeaturedArticle from '../slidebar/featured-articale';
 import { useModelContext } from '../context/Context';
-import { CategoryFilter }  from '../slidebar/category-filter';
+import { CategoryFilter } from '../slidebar/category-filter';
+import Footer from '../slidebar/FOOTER';
+import { motion, AnimatePresence } from 'framer-motion';
+
 const Page = () => {
-  const [newss, setnewss] = useState([]);
+  const [newss, setNewss] = useState([]);
   const [page, setPage] = useState(1);
   const [filteredUsers, setFilteredUsers] = useState([]);
-  const { searchterm, setsearchterm } = useModelContext();
+  const [isLoading, setIsLoading] = useState(true);
+  const { searchterm } = useModelContext();
 
   useEffect(() => {
     fetch('/api/news')
-      .then(response => response.json())
-      .then(data => {
-        setnewss(data);
-        setFilteredUsers(data); // Initially set filteredUsers to all users
+      .then((response) => response.json())
+      .then((data) => {
+        setNewss(data);
+        setFilteredUsers(data);
+        setIsLoading(false);
       })
-      .catch(error => console.error('Error fetching users:', error));
+      .catch((error) => {
+        console.error('Error fetching news:', error);
+        setIsLoading(false);
+      });
   }, []);
 
-
   useEffect(() => {
-    // Filter news based on searchTerm
     if (searchterm.length > 2) {
-      const filtered = newss.filter(newsItem =>
+      const filtered = newss.filter((newsItem) =>
         newsItem.headline.toLowerCase().includes(searchterm.toLowerCase())
       );
       setFilteredUsers(filtered);
     } else {
-      setFilteredUsers(newss); // Reset to all news if search term is too short
+      setFilteredUsers(newss);
     }
-    setPage(1); // Reset to first page on new search
+    setPage(1);
   }, [searchterm, newss]);
+
   const usersPerPage = 9;
   const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
   const startIndex = (page - 1) * usersPerPage;
   const selectedUsers = filteredUsers.slice(startIndex, startIndex + usersPerPage);
 
   return (
+    <div className="min-h-screen bg-gradient-to-b from-[#020B2C] to-[#0D1B4A]">
+      <LAHEAD />
 
-    <div>
-      <div>
-        <LAHEAD  />
-        <FeaturedArticle/>
-        <CategoryFilter setFilteredUsers={setFilteredUsers} newss={newss} />
-        
-      </div>
-      <NEWSTEMP news={selectedUsers} />
-      <div className="pagination-controls flex pb-3  justify-center mt-5">
-        {[...Array(totalPages)].map((_, index) => (
-          <button
-            key={index}
-            className={`page-btn mx-2 px-4 py-2 border rounded-lg text-lg ${page === index + 1 ? 'bg-blue-500 text-white border-blue-500' : 'bg-gray-100 text-black border-gray-300'
-              } hover:bg-gray-200 focus:outline-none`}
-            onClick={() => setPage(index + 1)}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+        className="container flex-col mx-auto px-4 py-8"
+      >
+        {/* ✅ Ensure FeaturedArticle is inside a div */}
+        <div className="relative z-10 w-full h-auto">
+          <FeaturedArticle />
+        </div>
+
+        <motion.div
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.2 }}
+        >
+          <CategoryFilter setFilteredUsers={setFilteredUsers} newss={newss} />
+        </motion.div>
+
+        {isLoading ? (
+          <div className="flex items-center justify-center h-64">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+          </div>
+        ) : (
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={page}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              <NEWSTEMP news={selectedUsers} />
+            </motion.div>
+          </AnimatePresence>
+        )}
+
+        {totalPages > 1 && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4 }}
+            className="flex justify-center mt-8 gap-2"
           >
-            {index + 1}
-          </button>
-        ))}
-      </div>
-
+            {[...Array(totalPages)].map((_, index) => (
+              <motion.button
+                key={index}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                className={`w-10 h-10 rounded-lg transition-all ${
+                  page === index + 1
+                    ? "bg-blue-600 text-white shadow-lg"
+                    : "bg-white/10 text-gray-300 hover:bg-white/20"
+                }`}
+                onClick={() => setPage(index + 1)}
+              >
+                {index + 1}
+              </motion.button>
+            ))}
+          </motion.div>
+        )}
+      </motion.div>
+      
+      <Footer />
     </div>
-
   );
 };
 

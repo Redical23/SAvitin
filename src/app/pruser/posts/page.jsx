@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { InternshipPost } from "../../slidebar/IntershipPost";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import LAHEAD from "../../slidebar/LAHEAD";
 import { useModelContext } from "../../context/Context";
 
@@ -19,16 +19,16 @@ function InternshipFeed() {
         const response = await fetch("/api/posts", { cache: "no-store" });
         const data = await response.json();
 
-        console.log("\ud83d\udce2 Fetched posts from API:", data); // Debugging line
+        console.log("📢 Fetched posts from API:", data);
 
         if (data.success) {
           const userPosts = data.data.filter(post => post.email === decodedEmail);
           setPosts(userPosts);
         } else {
-          console.error("\u26a0\ufe0f API error:", data.message);
+          console.error("⚠️ API error:", data.message);
         }
       } catch (error) {
-        console.error("\u274c Fetch error:", error);
+        console.error("❌ Fetch error:", error);
       } finally {
         setIsLoading(false);
       }
@@ -38,32 +38,49 @@ function InternshipFeed() {
   }, [decodedEmail]);
 
   return (
-    <div>
+    <div className="min-h-screen bg-gradient-to-b from-[#00103a] to-[#001f6c]">
       <LAHEAD />
-      <div className="min-h-screen bg-[#00103a] text-white py-8 px-4">
-        <div className="max-w-2xl mx-auto">
-          <h1 className="text-3xl font-bold mb-8 text-center">
-            Internship Opportunities
-          </h1>
-          {isLoading ? (
-            <div className="text-center text-blue-400">Loading posts...</div>
-          ) : posts.length > 0 ? (
-            <div className="space-y-4">
+      <div className="container flex-col mx-auto px-4 py-12">
+        <motion.h1
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-4xl font-bold mb-8 text-center text-white"
+        >
+          Internship Opportunities
+        </motion.h1>
+        {isLoading ? (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="text-center text-blue-300 text-lg"
+          >
+            Loading posts...
+          </motion.div>
+        ) : posts.length > 0 ? (
+          <AnimatePresence>
+            <motion.div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {posts.map((post, index) => (
                 <motion.div
                   key={index}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
                   transition={{ duration: 0.3, delay: index * 0.1 }}
                 >
                   <InternshipPost {...post} />
                 </motion.div>
               ))}
-            </div>
-          ) : (
-            <div className="text-center text-gray-400">No posts available</div>
-          )}
-        </div>
+            </motion.div>
+          </AnimatePresence>
+        ) : (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="text-center text-gray-400 text-lg"
+          >
+            No posts available
+          </motion.div>
+        )}
       </div>
     </div>
   );

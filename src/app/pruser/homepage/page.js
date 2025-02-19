@@ -4,36 +4,47 @@ import { useModelContext } from "../../context/Context";
 import LAHEAD from "../../slidebar/LAHEAD";
 import LAWYERSSTEMP from "../../templates/LAWYERSTEMP";
 import FeaturedLawyer from "../../slidebar/feature-lawyer";
+import { useSearchParams } from "next/navigation";
+import Footer from "../../slidebar/FOOTER";
+import { motion, AnimatePresence } from "framer-motion";
 
 const Page = () => {
   const [users, setUsers] = useState([]);
+  const searchParams = useSearchParams();
   const [page, setPage] = useState(1);
   const [filteredUsers, setFilteredUsers] = useState([]);
   const { searchterm } = useModelContext();
   const [selectedFilter, setSelectedFilter] = useState("");
+  const filterFromUrl = searchParams.get("filter") || "";
+  const [isHydrated, setIsHydrated] = useState(false);
+
+  // Ensure the page is fully hydrated before rendering content
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
 
   useEffect(() => {
-    fetch("/api/laywers")
+    if (!isHydrated) return;
+    fetch("/api/laywers", { cache: "no-store" })
       .then((response) => response.json())
       .then((data) => {
         setUsers(data);
         setFilteredUsers(data);
       })
       .catch((error) => console.error("Error fetching users:", error));
-  }, []);
+  }, [isHydrated]);
 
   useEffect(() => {
+    if (!isHydrated) return;
     let filtered = users;
 
-    // Filter by search term
     if (searchterm.length > 2) {
       filtered = filtered.filter((user) =>
-        user.name.toLowerCase().includes(searchterm.toLowerCase())
+        user.name?.toLowerCase().includes(searchterm.toLowerCase())
       );
     }
 
-    // Filter by practice area (fixing array filtering)
-    if (selectedFilter) {
+    if (selectedFilter && selectedFilter !== "All") {
       filtered = filtered.filter((user) =>
         user.areasOfPractice && Array.isArray(user.areasOfPractice)
           ? user.areasOfPractice.some(
@@ -44,59 +55,70 @@ const Page = () => {
     }
 
     setFilteredUsers(filtered);
-  }, [searchterm, users, selectedFilter]);
+  }, [searchterm, users, selectedFilter, isHydrated]);
 
-  const handleFilterClick = (filter) => {
-    setSelectedFilter(selectedFilter === filter ? "" : filter);
-  };
+  useEffect(() => {
+    setSelectedFilter(filterFromUrl);
+  }, [filterFromUrl]);
 
   const usersPerPage = 9;
   const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
   const startIndex = (page - 1) * usersPerPage;
   const selectedUsers = filteredUsers.slice(startIndex, startIndex + usersPerPage);
 
+  const filters = ["All", "Corporate Law", "Immigration Law", "Family Law", "Criminal Law"];
+
+  // Prevent rendering until hydration is complete
+  if (!isHydrated) return null;
+
   return (
-    <div>
+    <div className="min-h-screen bg-gradient-to-br from-[#020B2C] to-[#0D1B4A]">
       <LAHEAD />
-      <FeaturedLawyer />
-      <div>
-        {/* Filter Buttons */}
-        <div className="filters pt-4 flex flex-wrap gap-2">
-          {["All", "Corporate Law", "Immigration Law", "Family Law", "Criminal Law"].map(
-            (filter, index) => (
-              <button
-                key={index}
-                className={`px-4 py-2 rounded-full border ${
-                  selectedFilter === filter ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-700"
-                }`}
-                onClick={() => handleFilterClick(filter === "All" ? "" : filter)}
-              >
-                {filter}
-              </button>
-            )
-          )}
-        </div>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+        className="container flex-col mx-auto px-4 py-8"
+      >
+        <FeaturedLawyer />
 
-        {/* Display Lawyers */}
-        <LAWYERSSTEMP users={selectedUsers} />
+        <motion.div
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.2 }}
+          className="flex flex-wrap justify-center gap-4 mt-8"
+        >
+          {filters.map((filter, index) => (
+            <motion.button
+              key={index}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className={`px-6 py-2 rounded-full transition-all ${
+                selectedFilter === filter
+                  ? "bg-blue-600 text-white shadow-lg"
+                  : "bg-white/10 text-gray-300 hover:bg-white/20"
+              }`}
+              onClick={() => setSelectedFilter(filter === "All" ? "" : filter)}
+            >
+              {filter}
+            </motion.button>
+          ))}
+        </motion.div>
 
-        {/* Pagination */}
-        {totalPages > 1 && (
-          <div className="pagination-controls flex justify-center mt-5">
-            {[...Array(totalPages)].map((_, index) => (
-              <button
-                key={index}
-                className={`mx-2 px-4 py-2 border rounded-lg text-lg ${
-                  page === index + 1 ? "bg-blue-500 text-white" : "bg-gray-100 text-black"
-                } hover:bg-gray-200`}
-                onClick={() => setPage(index + 1)}
-              >
-                {index + 1}
-              </button>
-            ))}
-          </div>
-        )}
-      </div>
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={page + selectedFilter}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
+            className="mt-8 w-11/12"
+          >
+            <LAWYERSSTEMP users={selectedUsers} />
+          </motion.div>
+        </AnimatePresence>
+      </motion.div>
+      <Footer />
     </div>
   );
 };

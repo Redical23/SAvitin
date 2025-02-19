@@ -1,20 +1,22 @@
+"use client";
+
 import { useState, useEffect, useRef } from "react";
-import { Heart, MessageCircle, Share2, MoreHorizontal } from "lucide-react";
+import { Heart, MessageCircle, Share2, MoreHorizontal, MapPin, LinkIcon } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useModelContext } from "../context/Context";
+import { useRouter } from "next/navigation";
 
 export function InternshipPost({
+  _id,
+  id,
   name,
-  email, // Post owner's email
+  email,
   avatar,
-  company,
-  position,
   description,
   location,
+  link,
   postedAt,
-  companyLogo,
   likes: initialLikes,
-  comments,
   postId,
   onDelete,
   onLike,
@@ -22,10 +24,11 @@ export function InternshipPost({
   const [likeCount, setLikeCount] = useState(initialLikes);
   const [isLiked, setIsLiked] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [isLikeAnimating, setIsLikeAnimating] = useState(false);
-  const [showCopiedToast, setShowCopiedToast] = useState(false);
-  const { email: currentUserEmail } = useModelContext(); // Get logged-in user's email
+  const { email: currentUserEmail } = useModelContext();
   const menuRef = useRef(null);
+  const router = useRouter();
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -33,78 +36,44 @@ export function InternshipPost({
         setMenuOpen(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleLike = async () => {
-    try {
-      setIsLikeAnimating(true);
-      const newIsLiked = !isLiked;
-      setIsLiked(newIsLiked);
-      setLikeCount((prev) => (newIsLiked ? prev + 1 : prev - 1));
+  const decodedEmail = currentUserEmail ? decodeURIComponent(currentUserEmail) : null;
 
-      if (onLike) {
-        await onLike(postId, newIsLiked);
-      }
-    } catch (error) {
-      setIsLiked(!isLiked);
-      setLikeCount((prev) => (isLiked ? prev + 1 : prev - 1));
-      console.error("Failed to update like status:", error);
-    } finally {
-      setTimeout(() => setIsLikeAnimating(false), 300);
-    }
-  };
-
-  const handleShare = async () => {
-    try {
-      const postUrl = `${window.location.origin}/post/${postId}`;
-      await navigator.clipboard.writeText(postUrl);
-      setShowCopiedToast(true);
-      setTimeout(() => setShowCopiedToast(false), 2000);
-    } catch (error) {
-      console.error("Failed to copy to clipboard:", error);
-    }
-  };
-
-  const handleDeletePost = async () => {
-    if (email !== currentUserEmail) {
-      alert("You can only delete your own posts!");
+  const handleDelete = async () => {
+    if (!decodedEmail) {
+      setError("User email not found.");
       return;
     }
 
-    const confirmed = window.confirm("Are you sure you want to delete this post?");
+    const confirmed = window.confirm("Are you sure you want to delete this post? This action cannot be undone.");
     if (!confirmed) return;
 
+    setLoading(true);
     try {
-      if (onDelete) {
-        await onDelete(postId);
+      const res = await fetch("/api/posts", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: _id }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "Failed to delete post.");
       }
-    } catch (error) {
-      console.error("Failed to delete post:", error);
-      alert("Failed to delete post. Please try again.");
+
+      alert("Post deleted successfully!");
+      router.push("/login");
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
-
-    if (diffInSeconds < 60) return "Just now";
-    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
-    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
-    if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)}d ago`;
-
-    return date.toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-    });
-  };
-  const decodedEmail = currentUserEmail ? decodeURIComponent(currentUserEmail) : null;
-console.log(email,decodedEmail)
   return (
     <motion.div
       className="bg-[#001a5e] rounded-xl p-6 shadow-lg border border-blue-300 hover:bg-[#002080] transition-colors relative"
@@ -126,7 +95,7 @@ console.log(email,decodedEmail)
           <div className="flex items-center justify-between relative">
             <div>
               <h3 className="font-semibold text-blue-300 hover:text-blue-200 cursor-pointer">{name}</h3>
-              <p className="text-sm text-gray-400">{formatDate(postedAt)}</p>
+              <p className="text-sm text-gray-400">{new Date(postedAt).toLocaleString()}</p>
             </div>
 
             <div ref={menuRef} className="relative">
@@ -149,14 +118,14 @@ console.log(email,decodedEmail)
                   >
                     <button
                       className="w-full text-left px-3 py-2 hover:bg-gray-700 rounded transition-colors"
-                      onClick={() => alert(`Go to ${name}'s profile`)}
+                      onClick={() => router.push(`/userid/${id}`)}
                     >
                       View Profile
                     </button>
                     {email === decodedEmail && (
                       <button
                         className="w-full text-left px-3 py-2 hover:bg-red-600 rounded transition-colors text-red-400 hover:text-white"
-                        onClick={handleDeletePost}
+                        onClick={handleDelete}
                       >
                         Delete Post
                       </button>
@@ -169,25 +138,30 @@ console.log(email,decodedEmail)
 
           <p className="text-gray-300 mt-2 leading-relaxed">{description}</p>
 
-          <div className="flex items-center space-x-6 mt-4 text-gray-400">
-            <motion.button
-              className={`flex items-center space-x-2 hover:text-blue-400 ${isLiked ? "text-red-400" : ""}`}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              onClick={handleLike}
-            >
-              <Heart size={18} fill={isLiked ? "currentColor" : "none"} className={isLiked ? "text-red-400" : ""} />
-              <span className="text-sm">{likeCount}</span>
-            </motion.button>
+          {location && (
+            <div className="flex items-center text-gray-400 mt-2">
+              <MapPin size={16} className="mr-2 text-blue-400" />
+              <span>{location}</span>
+            </div>
+          )}
 
-            <motion.button
-              className="flex items-center space-x-2 hover:text-blue-400"
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              onClick={handleShare}
-            >
-              <Share2 size={18} />
-            </motion.button>
+          {link && (
+            <div className="mt-2">
+              <a
+                href={link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-400 hover:text-blue-300 flex items-center"
+              >
+                <LinkIcon size={16} className="mr-2" />
+                {link}
+              </a>
+            </div>
+          )}
+
+          <div className="flex items-center space-x-6 mt-4 text-gray-400">
+            {/* Like and share buttons */}
+            {/* Add actual like and share buttons if needed */}
           </div>
         </div>
       </div>

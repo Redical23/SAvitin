@@ -2,17 +2,49 @@
 
 import React, { useState, useEffect } from "react";
 import { InternshipPost } from "../../slidebar/IntershipPost";
-import {CreatePost} from "../../slidebar/Createpost";
-import { Plus } from "lucide-react";
+import { CreatePost } from "../../slidebar/Createpost";
+import { Plus, Loader2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import LAHEAD from "../../slidebar/LAHEAD";
+import Footer from "../../slidebar/FOOTER";
+import { useModelContext } from "../../context/Context";
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1
+    }
+  }
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    transition: {
+      type: "spring",
+      stiffness: 100
+    }
+  }
+};
+
+const fadeIn = {
+  hidden: { opacity: 0 },
+  visible: { 
+    opacity: 1,
+    transition: { duration: 0.6 }
+  }
+};
 
 function InternshipFeed() {
   const [showCreatePost, setShowCreatePost] = useState(false);
   const [posts, setPosts] = useState([]);
+  const { searchterm } = useModelContext();
   const [isLoading, setIsLoading] = useState(true);
 
-  // Fetch posts on component mount
   useEffect(() => {
     const fetchPosts = async () => {
       try {
@@ -38,22 +70,44 @@ function InternshipFeed() {
     setShowCreatePost(false);
   };
 
+  const filteredPosts = posts.filter((post) =>
+    searchterm?.length > 2
+      ? post?.title?.toLowerCase().includes(searchterm.toLowerCase()) ||
+        post?.description?.toLowerCase().includes(searchterm.toLowerCase())
+      : true
+  );
+
   return (
-    <div>
+    <div className="min-h-screen bg-gradient-to-b from-[#00103a] to-[#001a5e]">
       <LAHEAD />
-      <div className="min-h-screen bg-[#00103a] text-white py-8 px-4">
-        <div className="max-w-2xl mx-auto">
-          <h1 className="text-3xl font-bold mb-8 text-center">
+      <motion.div 
+        initial="hidden"
+        animate="visible"
+        variants={fadeIn}
+        className="py-12 px-4 sm:px-6 lg:px-8"
+      >
+        <div className="max-w-3xl mx-auto">
+          <motion.h1 
+            variants={itemVariants}
+            className="text-4xl font-bold text-center text-white mb-2"
+          >
             Internship Opportunities
-          </h1>
+          </motion.h1>
+          <motion.p 
+            variants={itemVariants}
+            className="text-center text-blue-200 mb-12"
+          >
+            Discover and apply for exciting internship positions
+          </motion.p>
           
-          <AnimatePresence>
+          <AnimatePresence mode="wait">
             {showCreatePost && (
               <motion.div
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.3 }}
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ type: "spring", bounce: 0.3 }}
+                className="mb-8"
               >
                 <CreatePost
                   onPost={handleNewPost}
@@ -63,34 +117,61 @@ function InternshipFeed() {
             )}
           </AnimatePresence>
 
-          {isLoading ? (
-            <div className="text-center text-blue-400">Loading posts...</div>
-          ) : posts.length > 0 ? (
-            <div className="space-y-4">
-              {posts.map((post, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, delay: index * 0.1 }}
-                >
-                  <InternshipPost {...post} />
-                </motion.div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center text-gray-400">No posts available</div>
-          )}
+          <AnimatePresence mode="wait">
+            {isLoading ? (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="flex flex-col items-center justify-center py-12"
+              >
+                <Loader2 className="w-8 h-8 text-blue-400 animate-spin mb-4" />
+                <p className="text-blue-200">Loading opportunities...</p>
+              </motion.div>
+            ) : filteredPosts.length > 0 ? (
+              <motion.div
+                variants={containerVariants}
+                initial="hidden"
+                animate="visible"
+                className="space-y-6"
+              >
+                {filteredPosts.map((post, index) => (
+                  <motion.div
+                    key={post.id || index}
+                    variants={itemVariants}
+                    layout
+                    className="transform hover:-translate-y-1 transition-transform duration-200"
+                  >
+                    <InternshipPost {...post} />
+                  </motion.div>
+                ))}
+              </motion.div>
+            ) : (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="text-center py-12 bg-white/5 rounded-lg backdrop-blur-sm"
+              >
+                <p className="text-gray-300 text-lg">No internship posts available</p>
+                <p className="text-gray-400 mt-2">Be the first to create one!</p>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
+
         <motion.button
-          className="fixed bottom-8 right-8 bg-blue-500 text-white p-4 rounded-full shadow-lg hover:bg-blue-600 transition-colors"
-          whileHover={{ scale: 1.1 }}
+          className="fixed bottom-8 right-8 bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-full shadow-lg backdrop-blur-sm"
+          whileHover={{ scale: 1.1, rotate: 180 }}
           whileTap={{ scale: 0.9 }}
+          initial={{ opacity: 0, scale: 0 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ type: "spring", stiffness: 200, damping: 15 }}
           onClick={() => setShowCreatePost(true)}
         >
           <Plus size={24} />
         </motion.button>
-      </div>
+      </motion.div>
+      <Footer />
     </div>
   );
 }

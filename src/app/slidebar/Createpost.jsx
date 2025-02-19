@@ -11,7 +11,7 @@ export function CreatePost({ onPost, onClose }) {
   const [error, setError] = useState(null);
   const [description, setDescription] = useState("");
   const [link, setLink] = useState("");
-  const [location, setLocation] = useState(""); // ✅ Added location field
+  const [location, setLocation] = useState(""); // Added location field
   const [loading, setLoading] = useState(false);
 
   const decodedEmail = email ? decodeURIComponent(email) : null;
@@ -56,12 +56,13 @@ export function CreatePost({ onPost, onClose }) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          name: user.name, // ✅ Send user's name
-          avatar: user.avatar, // ✅ Send user's avatar
-          email: user.email, // ✅ Ensure email is included
+          name: user.name,
+          avatar: user.avatar,
+          email: user.email,
           description,
           link,
-          location, // ✅ Send location
+          location, // Send location
+          id: user._id,
         }),
       });
 
@@ -72,7 +73,7 @@ export function CreatePost({ onPost, onClose }) {
         onPost(data.data);
         setDescription("");
         setLink("");
-        setLocation(""); // ✅ Reset location input
+        setLocation(""); // Reset location input
       } else {
         alert("Failed to create post: " + data.message);
       }
@@ -124,7 +125,7 @@ export function CreatePost({ onPost, onClose }) {
 
           <input
             type="text"
-            placeholder="Add location (optional)" // ✅ Location input
+            placeholder="Add location (optional)" // Location input
             className="w-full bg-[#002080] text-white border-b border-blue-300 focus:border-blue-500 focus:ring-0 p-2 mt-2 rounded"
             value={location}
             onChange={(e) => setLocation(e.target.value)}

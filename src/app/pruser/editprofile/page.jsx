@@ -12,9 +12,9 @@ const Page = () => {
   const router = useRouter();
   const allAreas = ["Corporate Law", "Immigration Law", "Family Law", "Criminal Law", "Tax Law"]; // Predefined tags
 
-  
   const [formData, setFormData] = useState({
     name: "",
+    username: "",
     title: "",
     avatar: "",
     bio: "",
@@ -31,6 +31,7 @@ const Page = () => {
     recentCases: [{ title: "", year: "", outcome: "" }],
     publications: [{ title: "", journal: "", year: "" }],
   });
+
   const toggleTag = (area) => {
     setFormData((prevData) => {
       const isSelected = prevData.areasOfPractice.includes(area);
@@ -42,6 +43,7 @@ const Page = () => {
       };
     });
   };
+
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -55,9 +57,9 @@ const Page = () => {
         if (res.ok) {
           setUser(data);
           // Pre-populate form with user data
-          setFormData(prev => ({
+          setFormData((prev) => ({
             ...prev,
-            ...data
+            ...data,
           }));
         } else {
           setError(data.error);
@@ -76,7 +78,7 @@ const Page = () => {
 
   useEffect(() => {
     if (updateAvtarURL) {
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
         avatar: updateAvtarURL,
       }));
@@ -89,12 +91,12 @@ const Page = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleArrayChange = (index, field, subfield = null) => (e) => {
     const { value } = e.target;
-    setFormData(prev => {
+    setFormData((prev) => {
       const newArray = [...prev[field]];
       if (subfield) {
         newArray[index] = { ...newArray[index], [subfield]: value };
@@ -106,7 +108,7 @@ const Page = () => {
   };
 
   const handleAddArrayItem = (field) => () => {
-    setFormData(prev => {
+    setFormData((prev) => {
       const newItem =
         field === "education"
           ? { degree: "", institution: "", year: "" }
@@ -120,7 +122,7 @@ const Page = () => {
   };
 
   const handleRemoveArrayItem = (field, index) => () => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       [field]: prev[field].filter((_, i) => i !== index),
     }));
@@ -152,7 +154,7 @@ const Page = () => {
       const result = await res.json();
 
       if (res.ok) {
-        router.push("/profile");
+        router.push("/pruser/profile");
       } else {
         setError(result.error);
       }
@@ -189,11 +191,11 @@ const Page = () => {
       <div className="bg-white shadow-lg rounded-lg overflow-hidden">
         <div className="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-6">
           <div className="flex items-center space-x-4">
-            <div className="w-24 h-24  shadow-lg">
-            <Image
+            <div className="w-24 h-24 shadow-lg">
+              <Image
                 onClick={handleAvatarClick}
                 src={avatarToShow}
-                 alt="Avatar"
+                alt="Avatar"
                 className="w-full h-full object-cover rounded-full"
                 width={120}
                 height={120}
@@ -229,49 +231,50 @@ const Page = () => {
                 id="title"
                 name="title"
                 type="text"
-                required
                 value={formData.title}
                 onChange={handleChange}
                 className="w-full p-2 border border-gray-300 rounded"
               />
             </div>
           </div>
-          <div>
-    <label className="block text-sm font-medium text-gray-700">Charge (in INR)</label>
-    <input
-      type="number"
-      name="charge"
-      value={formData.charge}
-      onChange={handleChange}
-      className="mt-1 p-2 w-full border rounded-md"
-      required
-    />
-  </div>
-
-  <div>
-    <label className="block text-sm font-medium text-gray-700">Years of Experience</label>
-    <input
-      type="number"
-      name="yearsexp"
-      value={formData.yearsexp}
-      onChange={handleChange}
-      className="mt-1 p-2 w-full border rounded-md"
-      required
-    />
-  </div>
-          {/* <div className="space-y-2">
-            <label htmlFor="avatar" className="block text-sm font-medium text-gray-700">
-              Avatar URL
+          {/* New Username field */}
+          <div className="space-y-2 mt-6">
+            <label htmlFor="username" className="block text-sm font-medium text-gray-700">
+              Username
             </label>
             <input
-              id="avatar"
-              name="avatar"
-              type="url"
-              value={formData.avatar}
+              id="username"
+              name="username"
+              type="text"
+              value={formData.username}
               onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded"
             />
-          </div> */}
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Charge (in INR)</label>
+            <input
+              type="number"
+              name="charge"
+              value={formData.charge}
+              onChange={handleChange}
+              className="mt-1 p-2 w-full border rounded-md"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Years of Experience</label>
+            <input
+              type="number"
+              name="yearsexp"
+              value={formData.yearsexp}
+              onChange={handleChange}
+              className="mt-1 p-2 w-full border rounded-md"
+              required
+            />
+          </div>
 
           <div className="space-y-2">
             <label htmlFor="bio" className="block text-sm font-medium text-gray-700">
@@ -330,20 +333,6 @@ const Page = () => {
                 className="w-full p-2 border border-gray-300 rounded"
               />
             </div>
-            {/* <div className="space-y-2">
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                Email
-              </label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                value={formData.email}
-                onChange={handleChange}
-                className="w-full p-2 border border-gray-300 rounded"
-                readOnly
-              />
-            </div> */}
           </div>
 
           <div className="space-y-2">
@@ -414,37 +403,36 @@ const Page = () => {
           </div>
 
           <div className="space-y-2">
-      <label className="block text-sm font-medium text-gray-700">
-        Areas of Practice
-      </label>
-      <div className="flex flex-wrap gap-2">
-        {allAreas.map((area, index) => {
-          const isSelected = formData.areasOfPractice.includes(area);
-          return (
-            <div
-              key={index}
-              className={`cursor-pointer px-3 py-1 rounded-full border ${
-                isSelected
-                  ? "bg-blue-500 text-white border-blue-500"
-                  : "bg-gray-200 text-gray-700 border-gray-300"
-              }`}
-              onClick={() => toggleTag(area)}
-            >
-              {area}
+            <label className="block text-sm font-medium text-gray-700">
+              Areas of Practice
+            </label>
+            <div className="flex flex-wrap gap-2">
+              {allAreas.map((area, index) => {
+                const isSelected = formData.areasOfPractice.includes(area);
+                return (
+                  <div
+                    key={index}
+                    className={`cursor-pointer px-3 py-1 rounded-full border ${
+                      isSelected
+                        ? "bg-blue-500 text-white border-blue-500"
+                        : "bg-gray-200 text-gray-700 border-gray-300"
+                    }`}
+                    onClick={() => toggleTag(area)}
+                  >
+                    {area}
+                  </div>
+                );
+              })}
             </div>
-          );
-        })}
-      </div>
-      {/* Display selected areas */}
-      <div className="mt-4">
-        <strong>Selected Areas:</strong>{" "}
-        {formData.areasOfPractice.length > 0 ? (
-          formData.areasOfPractice.join(", ")
-        ) : (
-          <span className="text-gray-500">None selected</span>
-        )}
-      </div>
-    </div>
+            <div className="mt-4">
+              <strong>Selected Areas:</strong>{" "}
+              {formData.areasOfPractice.length > 0 ? (
+                formData.areasOfPractice.join(", ")
+              ) : (
+                <span className="text-gray-500">None selected</span>
+              )}
+            </div>
+          </div>
 
           <div className="space-y-2">
             <label className="block text-sm font-medium text-gray-700">Awards</label>
@@ -549,21 +537,6 @@ const Page = () => {
             </button>
           </div>
 
-          {/* <div className="space-y-2">
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-              Password
-            </label>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              value={formData.password}
-              onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded"
-              placeholder="Leave blank to keep current password"
-            />
-          </div> */}
-
           <div className="flex justify-end space-x-4">
             <button
               type="button"
@@ -579,8 +552,7 @@ const Page = () => {
         </form>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Page
-
+export default Page;

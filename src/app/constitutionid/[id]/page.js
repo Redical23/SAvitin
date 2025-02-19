@@ -1,6 +1,6 @@
 import { MongoClient, ObjectId } from "mongodb"
 import LAHEAD from "../../slidebar/LAHEAD"
-
+import Footer from "../../slidebar/FOOTER"
 async function getUserData(id) {
   const client = await MongoClient.connect(process.env.MONGODB_URI)
   const db = client.db()
@@ -118,6 +118,7 @@ export default async function ConstitutionDetailPage({ params }) {
         </div>
       </div>
     </div>
+     <Footer />
             </div>
   )
 }
