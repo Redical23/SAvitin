@@ -10,14 +10,18 @@ export default function FeaturedLawyer() {
 
   useEffect(() => {
     fetch("/api/laywers", { cache: "no-store" })
-      .then((response) => response.json())
-      .then((data) => {
-        // Convert all nested data to plain objects
-        const plainData = JSON.parse(JSON.stringify(data));
-        const subscribedLawyers = plainData.filter((lawyer) => lawyer.subscribe === true);
-        setLawyers(subscribedLawyers);
-      })
-      .catch((error) => console.error("Error fetching users:", error));
+    .then((response) => response.json())
+    .then((data) => {
+      console.log("Fetched data:", data); // Debugging output
+      if (!Array.isArray(data)) {
+        console.error("Expected an array but got:", typeof data, data);
+        return;
+      }
+      const subscribedLawyers = data.filter((lawyer) => lawyer.subscribe === true);
+      setLawyers(subscribedLawyers);
+    })
+    .catch((error) => console.error("Error fetching users:", error));
+  
   }, []);
 
   useEffect(() => {

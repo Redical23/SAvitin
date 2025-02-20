@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {  Scale,  Trash } from "lucide-react";
+import { Scale, Trash } from "lucide-react";
 import { useModelContext } from "../../context/Context";
 
 export const ChatHeader = () => {
@@ -8,32 +8,27 @@ export const ChatHeader = () => {
   const [error, setError] = useState(null);
   const [deleting, setDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState(null);
-  const [deleted, setDeleted] = useState(false); // Track if chat was deleted
+  const [deleted, setDeleted] = useState(false);
   const decodedEmail = currentchat ? decodeURIComponent(currentchat) : null;
-console.log(currentchat,"dsadassa")
+  console.log(currentchat, "Current chat in header");
+
   useEffect(() => {
     const fetchUserData = async () => {
       if (!decodedEmail) return;
-
       try {
-        const res = await fetch(`/api/users?email=${encodeURIComponent(decodedEmail)}`, {
-          method: 'GET',
-        });
-
+        const res = await fetch(`/api/users?email=${encodeURIComponent(decodedEmail)}`, { method: "GET" });
         const data = await res.json();
-
         if (res.ok) {
-          setUser(data); // Store user data in state
+          setUser(data);
         } else {
           throw new Error(data.error || "Failed to fetch user data");
         }
       } catch (error) {
         console.error("Error fetching user data:", error);
-        setError(error.message); // Set error message if fetch fails
+        setError(error.message);
       }
     };
-
-    fetchUserData(); // Call the function to fetch data
+    fetchUserData();
   }, [decodedEmail]);
 
   const handleDelete = async () => {
@@ -41,27 +36,20 @@ console.log(currentchat,"dsadassa")
       setDeleteError("No chat to delete.");
       return;
     }
-
     setDeleting(true);
     setDeleteError(null);
-
     try {
       const res = await fetch("/api/message", {
         method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          lawyer: user.email, // Assuming lawyer is the logged-in user
-          clientEmail: decodedEmail, // The client being discussed in this chat
+          lawyer: user.email,
+          clientEmail: decodedEmail,
         }),
       });
-
       const data = await res.json();
-
       if (res.ok) {
-        // Chat deleted successfully
-        setDeleted(true); // Mark chat as deleted
+        setDeleted(true);
         console.log("Chat deleted successfully:", data);
       } else {
         throw new Error(data.error || "Failed to delete chat");
@@ -77,22 +65,16 @@ console.log(currentchat,"dsadassa")
   if (error) {
     return <div className="text-red-500 p-4">Error: {error}</div>;
   }
-
   if (!user) {
     return <div className="text-gray-400 p-4">Loading...</div>;
   }
-
   const { name, avatar, status, caseNumber, isLawyer } = user;
 
   return (
     <div className="flex items-center justify-between p-4 bg-[#001845] border-b border-gray-700">
       <div className="flex items-center gap-3">
         <div className="relative">
-          <img
-            src={avatar}
-            alt={name}
-            className="w-10 h-10 rounded-full object-cover"
-          />
+          <img src={avatar} alt={name} className="w-10 h-10 rounded-full object-cover" />
           {isLawyer && (
             <div className="absolute -top-1 -right-1 bg-blue-500 rounded-full p-1">
               <Scale className="w-3 h-3 text-white" />
@@ -106,30 +88,16 @@ console.log(currentchat,"dsadassa")
         </div>
       </div>
       <div className="flex items-center gap-4">
-      
-
-        {/* Delete Button */}
-        <button 
-          onClick={handleDelete} 
-          disabled={deleting} 
+        <button
+          onClick={handleDelete}
+          disabled={deleting}
           className={`p-2 hover:bg-[#B00020] rounded-full transition-colors ${deleting ? "opacity-50" : ""}`}
         >
-          {deleting ? (
-            <span className="text-white">Deleting...</span>
-          ) : (
-            <Trash className="w-5 h-5 text-white" />
-          )}
+          {deleting ? <span className="text-white">Deleting...</span> : <Trash className="w-5 h-5 text-white" />}
         </button>
       </div>
-
       {deleteError && <div className="text-red-500 p-2">{deleteError}</div>}
-      
-      {/* Display message to refresh the page if chat is deleted */}
-      {deleted && (
-        <div className="text-green-500 p-2">
-          Chat deleted successfully! Please refresh the page.
-        </div>
-      )}
+      {deleted && <div className="text-green-500 p-2">Chat deleted successfully! Please refresh the page.</div>}
     </div>
   );
 };

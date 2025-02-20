@@ -32,26 +32,31 @@ const Footer = () => {
   };
 
   return (
-    <footer className="bg-gradient-to-br from-gray-900 to-gray-800 text-gray-300 py-12 px-4 text-sm">
-      <motion.div className="container flex-col mx-auto" variants={containerVariants} initial="hidden" animate="visible">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+    <footer className="bg-gradient-to-br from-gray-900 to-gray-800 text-gray-300 py-6 px-4 text-sm">
+      <motion.div
+        className="max-w-7xl mx-auto flex-col"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           <motion.div className="text-center md:text-left" variants={itemVariants}>
             <Image
               src="/IMAGES/propersid.png"
               alt="ProperAid Logo"
               width={150}
               height={50}
-              className="mb-4 mx-auto md:mx-0"
+              className="mb-3 mx-auto md:mx-0"
             />
-            <h3 className="text-xl font-semibold text-white mb-4">ProperAid</h3>
-            <p className="mb-4">
+            <h3 className="text-xl font-semibold text-white mb-2">ProperAid</h3>
+            <p className="mb-3">
               Your trusted partner in legal solutions. Connecting you with top-tier lawyers for all your legal needs.
             </p>
             <p>&copy; {new Date().getFullYear()} ProperAid. All Rights Reserved.</p>
           </motion.div>
 
           <motion.div className="text-center md:text-left" variants={itemVariants}>
-            <h4 className="text-lg font-semibold text-white mb-4">Practice Areas</h4>
+            <h4 className="text-lg font-semibold text-white mb-2">Practice Areas</h4>
             <nav className="space-y-2">
               {["Corporate Law", "Intellectual Property", "Civil Litigation", "Criminal Defense", "Family Law"].map(
                 (area) => (
@@ -70,7 +75,7 @@ const Footer = () => {
           </motion.div>
 
           <motion.div className="text-center md:text-left" variants={itemVariants}>
-            <h4 className="text-lg font-semibold text-white mb-4">Quick Links</h4>
+            <h4 className="text-lg font-semibold text-white mb-2">Quick Links</h4>
             <nav className="space-y-2">
               {["Find a Lawyer", "About Us", "FAQ", "Terms of Service", "Privacy Policy"].map((link, index) => (
                 <motion.a
@@ -87,7 +92,7 @@ const Footer = () => {
           </motion.div>
 
           <motion.div className="text-center md:text-left" variants={itemVariants}>
-            <h4 className="text-lg font-semibold text-white mb-4">Contact Us</h4>
+            <h4 className="text-lg font-semibold text-white mb-2">Contact Us</h4>
             <div className="space-y-2">
               <p className="flex items-center justify-center md:justify-start">
                 <Mail size={18} className="mr-2" /> Properaid45@.com
@@ -119,7 +124,10 @@ const Footer = () => {
             </div>
           </motion.div>
         </div>
-        <motion.div className="mt-8 pt-8 border-t border-gray-700 text-center text-gray-400" variants={itemVariants}>
+        <motion.div
+          className="mt-6 pt-6 border-t border-gray-700 text-center text-gray-400"
+          variants={itemVariants}
+        >
           <p>ProperAid is a lawyer referral service. We do not provide legal advice or representation.</p>
         </motion.div>
       </motion.div>

@@ -1,119 +1,124 @@
-"use client"
-import React, { useRef, useState } from 'react'
-import ReactCrop, { centerCrop, convertToPixelCrop, makeAspectCrop } from 'react-image-crop'
-import 'react-image-crop/dist/ReactCrop.css';
-import { useModelContext } from '../context/Context';
-import  setCanvasPreview from "./setCanvasPreview"
+"use client";
 
-const imagecropper = () => {
-  const imgRef = useRef(null)
-  const { isModelOpen , setIsModelOpen ,  setupdateAvtarURL  } = useModelContext();
-  
- const closeModels=()=>{setIsModelOpen(!isModelOpen); }
-  
-  const priviewcanvasref = useRef(null)
-  const [imgSrc, setimgSrc] = useState('')
-  const [crop, setCrop] = useState();
-  const [error, setError] = useState('');
-  const aspectratio = 1;
-  const min_width = 150;
+import React, { useRef, useState } from "react";
+import ReactCrop, { centerCrop, convertToPixelCrop, makeAspectCrop } from "react-image-crop";
+import "react-image-crop/dist/ReactCrop.css";
+import { motion } from "framer-motion";
+import { useModelContext } from "../context/Context";
+import setCanvasPreview from "./setCanvasPreview";
 
+const ImageCropper = () => {
+  const imgRef = useRef(null);
+  const { isModelOpen, setIsModelOpen, setupdateAvtarURL } = useModelContext();
+  const [imgSrc, setImgSrc] = useState("");
+  const [crop, setCrop] = useState(null);
+  const [error, setError] = useState("");
 
-  const onselectfile = (e) => {
+  const aspectRatio = 1;
+  const minWidth = 150;
 
+  const closeModels = () => setIsModelOpen(!isModelOpen);
+
+  const onSelectFile = (e) => {
     const file = e.target.files?.[0];
-    if (!file)
-      return;
-    const reader = new FileReader();
-    reader.addEventListener("load", () => {
-      const imageElement = new Image();
-      const imageurl = reader.result?.toString() || "";
-      imageElement.src = imageurl
-      imageElement.addEventListener('load', (e) => {
-        if (error) setError("")
-        const { naturalWidth, naturalHeight } = e.currentTarget;
-        console.log('Natural Width:', naturalWidth);
-        console.log('Natural Height:', naturalHeight);
-        if (naturalWidth < min_width || naturalHeight < min_width) {
-          setError('Error: Image size is too small.');
-          return setimgSrc('');
-        }
-      })
-      setimgSrc(imageurl)
-    });
-    reader.readAsDataURL(file);
+    if (!file) return;
 
-  }
-  const onimgload = (e) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const imageElement = new Image();
+      const imageUrl = reader.result?.toString() || "";
+      imageElement.src = imageUrl;
+
+      imageElement.onload = (event) => {
+        if (error) setError("");
+
+        const { naturalWidth, naturalHeight } = event.currentTarget;
+        if (naturalWidth < minWidth || naturalHeight < minWidth) {
+          setError("Error: Image size is too small.");
+          return setImgSrc("");
+        }
+      };
+
+      setImgSrc(imageUrl);
+    };
+
+    reader.readAsDataURL(file);
+  };
+
+  const onImageLoad = (e) => {
     const { width, height } = e.currentTarget;
-    const cropwithpercent = ((min_width / width) * 100)
-    const crop = makeAspectCrop({
-      unit: "%",
-      width: cropwithpercent
-    }, aspectratio, width,
+    const cropWithPercent = (minWidth / width) * 100;
+
+    const initialCrop = makeAspectCrop(
+      {
+        unit: "%",
+        width: cropWithPercent,
+      },
+      aspectRatio,
+      width,
       height
-    )
-    const centrecrop = centerCrop(crop, width, height)
-    setCrop(centrecrop)
-  }
-  const updatepics =(imgSrc)=>{setupdateAvtarURL(imgSrc)}
+    );
+
+    setCrop(centerCrop(initialCrop, width, height));
+  };
+
+  const handleCrop = () => {
+    const canvas = document.createElement("canvas");
+    setCanvasPreview(
+      imgRef.current,
+      canvas,
+      convertToPixelCrop(crop, imgRef.current.width, imgRef.current.height)
+    );
+    const dataUrl = canvas.toDataURL();
+    setupdateAvtarURL(dataUrl);
+    closeModels();
+  };
 
   return (
-    <div>
-      <input type="file" accept="image/*" onChange={onselectfile} />
-      <button type='button' onClick={closeModels} >Close</button>
-      {error && <p>{error}</p>}
-
+    <motion.div 
+      initial={{ opacity: 0, y: 30 }} 
+      animate={{ opacity: 1, y: 0 }} 
+      exit={{ opacity: 0, y: -30 }}
+      transition={{ duration: 0.3 }}
+      className="flex flex-col items-center bg-gray-900 p-6 rounded-lg shadow-lg max-w-lg w-full mx-auto"
+    >
+      <input 
+        type="file" 
+        accept="image/*" 
+        onChange={onSelectFile} 
+        className="mb-3 text-white w-full border border-gray-700 p-2 rounded-md"
+      />
+      
+      {error && <p className="text-red-500 text-sm">{error}</p>}
 
       {imgSrc && (
-        <div>
-
+        <div className="flex flex-col items-center w-full">
           <ReactCrop
-            onChange={(pixelcrop, percentcrop) => setCrop(percentcrop)}
+            onChange={(pixelCrop, percentCrop) => setCrop(percentCrop)}
             crop={crop}
             circularCrop
             keepSelection
-            aspect={aspectratio}
-            minWidth={min_width}
+            aspect={aspectRatio}
+            minWidth={minWidth}
+            className="mb-4"
           >
-            <img ref={imgRef} src={imgSrc} alt="upload" style={{ maxWidth: "70vh" }} onLoad={onimgload} /></ReactCrop>
-          <button onClick={() => {
-            setCanvasPreview(
-              imgRef.current,
-              priviewcanvasref.current,
-              convertToPixelCrop(crop, imgRef.current.width, imgRef.current.height)
+            <img ref={imgRef} src={imgSrc} alt="upload" className="max-w-[70vh] rounded-lg" onLoad={onImageLoad} />
+          </ReactCrop>
 
-            );
-            const dataurl =priviewcanvasref.current.toDataURL()
-            
-            
-            
-            updatepics(dataurl)
-            
-             closeModels();
-            
-            
-          }} >croppriview</button>
-
-
-</div>
+          <button
+            onClick={handleCrop}
+            className="bg-blue-600 hover:bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg transition-all w-full"
+          >
+            Crop & Save
+          </button>
+        </div>
       )}
 
-      {crop && (
-        <canvas
-        
-          ref = {priviewcanvasref}
-          className="mt-4"
-          style={{
-            
-            border: '1px solid black',
-            objectFit: 'contain',
-            width: 150,
-            height: 150,
-          }}
-        />
-      )}
-    </div>
+      <button onClick={closeModels} className="mt-4 text-gray-300 hover:text-white w-full">
+        Close
+      </button>
+    </motion.div>
   );
 };
-export default imagecropper
+
+export default ImageCropper;

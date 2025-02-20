@@ -6,27 +6,24 @@ import { useModelContext } from "../../context/Context";
 export default function EmailPage({ params }) {
   const router = useRouter();
   const { email, setclientemail } = useModelContext();
-  const [user, setUser] = useState(null); // To store fetched user data (avatar, username)
-  const [error, setError] = useState(null); // To handle errors
+  const [user, setUser] = useState(null); // to store fetched user data
+  const [error, setError] = useState(null);
 
   console.log("🚀 EmailPage Mounted");
   console.log("🔍 Params:", params);
 
-  // Ensure params exist and extract email2 properly
   const email2 = params?.email2 ? decodeURIComponent(params.email2) : null;
   console.log("📩 Extracted email2:", email2);
 
-  // Fetch user data (avatar, username) for the provided email
   const fetchUserData = async (email2) => {
     try {
       const res = await fetch(`/api/users?email=${encodeURIComponent(email2)}`);
       const data = await res.json();
-
       if (res.ok) {
-        setUser(data); // Store the user data in state
+        setUser(data);
         console.log("👤 Fetched user data for email2:", data);
       } else {
-        setError(data.error); // Handle errors
+        setError(data.error);
         console.error("❌ Error fetching user data:", data.error);
       }
     } catch (error) {
@@ -35,26 +32,13 @@ export default function EmailPage({ params }) {
     }
   };
 
-  // Initialize conversation with the fetched user data
   const initializeConversation = async (email, email2, user) => {
-    if (!email2 || !user) return; // Wait for user data before initializing conversation
-
-    console.log("📡 Initializing conversation...");
-    console.log("Lawyer:", email, "Client:", email2);
+    if (!email2 || !user) return;
+    console.log("📡 Initializing conversation...", email, email2);
 
     try {
-      // Ensure avatar and username are set
       const avatar = user.avatar || "/images/default-avatar.png";
       const username = user.username || "Client";
-
-      if (!user.avatar) {
-        console.warn("⚠️ User avatar is missing, using default.");
-      }
-
-      if (!user.username) {
-        console.warn("⚠️ User username is missing, using 'Client' as default.");
-      }
-
       const messageContent = `Hello, ${username}!`;
 
       const res = await fetch("/api/message", {
@@ -64,8 +48,8 @@ export default function EmailPage({ params }) {
           from: email,
           to: email2,
           content: messageContent,
-          avatar: avatar, // Send user's avatar if available
-          username: username, // Send user's username if available
+          avatar: avatar,
+          username: username,
         }),
       });
 
@@ -83,17 +67,13 @@ export default function EmailPage({ params }) {
     }
   };
 
-  // When email2 changes, fetch the user data and initialize conversation
   useEffect(() => {
     if (!email2) {
       console.warn("⚠️ No email2 provided in params. Skipping...");
       return;
     }
-
     setclientemail(email2);
     console.log("✅ Client email set in context:", email2);
-
-    // Fetch user data and then initialize the conversation
     fetchUserData(email2);
   }, [email2, setclientemail]);
 
@@ -104,9 +84,9 @@ export default function EmailPage({ params }) {
   }, [user, email, email2]);
 
   return (
-    <div className="flex items-center justify-center h-screen bg-[#001845]">
-      <div className="bg-[#001230] p-8 rounded-lg shadow-lg">
-        <p className="text-white text-lg">Setting up your chat...</p>
+    <div className="flex items-center justify-center h-screen bg-[#001845] p-4 md:p-8">
+      <div className="bg-[#001230] p-6 md:p-8 rounded-lg shadow-lg max-w-md w-full">
+        <p className="text-white text-lg md:text-xl text-center">Setting up your chat...</p>
       </div>
     </div>
   );

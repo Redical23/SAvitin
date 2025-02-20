@@ -14,7 +14,7 @@ const LAHEAD = () => {
   const { isModelOpen, setIsModelOpen, email } = useModelContext();
   const pathname = usePathname();
 
-  const handleAvatarClick = () => setIsModelOpen(!isModelOpen);
+ 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   useEffect(() => {
@@ -33,22 +33,20 @@ const LAHEAD = () => {
 
   return (
     <header className="bg-gradient-to-r from-[#1E293B] via-[#0F172A] to-[#1E3A8A] text-white shadow-lg py-3">
-      <div className="container mx-auto px-6 flex items-center justify-between">
+      <div className="w-full max-w-7xl mx-auto px-6 flex flex-wrap items-center justify-between">
         {/* Logo */}
-        <a href="/lawyer" className="text-3xl font-extrabold text-[#FFB400]">
+        <a href="/pruser/homepage" className="text-3xl font-extrabold text-[#FFB400]">
           PROPER AID
         </a>
-
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center space-x-8">
           <Navigation />
           {pathname !== "/Constitustion" && <SearchBar />}
-
           {/* Avatar & Buttons */}
           <div className="flex items-center space-x-5">
             <button
               className="w-12 h-12 rounded-full overflow-hidden border-2 border-[#FFB400] shadow-md hover:shadow-lg transition-all"
-              onClick={handleAvatarClick}
+            
             >
               <img src={user?.avatar || "/default-avatar.png"} alt="User avatar" className="w-full h-full object-cover" />
             </button>
@@ -66,13 +64,11 @@ const LAHEAD = () => {
             </button>
           </div>
         </div>
-
         {/* Mobile Menu Button */}
         <button className="md:hidden text-white" onClick={toggleMenu}>
           {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
         </button>
       </div>
-
       {/* Mobile Menu */}
       {isMenuOpen && (
         <div className="mt-4 md:hidden bg-gradient-to-r from-[#1E293B] via-[#0F172A] to-[#1E3A8A] p-6 rounded-lg shadow-lg">
@@ -81,7 +77,7 @@ const LAHEAD = () => {
           <div className="mt-5 flex flex-col space-y-4">
             <button
               className="w-12 h-12 rounded-full overflow-hidden border-2 border-[#FFB400] shadow-md"
-              onClick={handleAvatarClick}
+              
             >
               <img src={user?.avatar || "/default-avatar.png"} alt="User avatar" className="w-full h-full object-cover" />
             </button>

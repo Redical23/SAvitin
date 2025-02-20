@@ -20,6 +20,9 @@ margin: 10px 0px;
 }
 .body{
   background-color: #00103a;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden; 
 }
 .accountmppic{
   order: 5px solid black;
@@ -141,14 +144,7 @@ input:focus{
 
 }
   
-.container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-}
+
 .feature{
   background-color: #393E46;
   display: flex;
