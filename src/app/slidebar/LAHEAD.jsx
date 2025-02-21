@@ -1,7 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { usePathname } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import Navigation from "./Navigation";
 import SearchBar from "./SearchBarA";
 import { useModelContext } from "../context/Context";
@@ -14,7 +13,6 @@ const LAHEAD = () => {
   const { isModelOpen, setIsModelOpen, email } = useModelContext();
   const pathname = usePathname();
 
- 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   useEffect(() => {
@@ -46,7 +44,6 @@ const LAHEAD = () => {
           <div className="flex items-center space-x-5">
             <button
               className="w-12 h-12 rounded-full overflow-hidden border-2 border-[#FFB400] shadow-md hover:shadow-lg transition-all"
-            
             >
               <img src={user?.avatar || "/default-avatar.png"} alt="User avatar" className="w-full h-full object-cover" />
             </button>
@@ -77,7 +74,6 @@ const LAHEAD = () => {
           <div className="mt-5 flex flex-col space-y-4">
             <button
               className="w-12 h-12 rounded-full overflow-hidden border-2 border-[#FFB400] shadow-md"
-              
             >
               <img src={user?.avatar || "/default-avatar.png"} alt="User avatar" className="w-full h-full object-cover" />
             </button>

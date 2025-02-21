@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from "react"
 import { usePathname } from "next/navigation"
+import { motion } from "framer-motion"
 import Link from "next/link"
 import SIGNOUT from "../../signinout/SIGNOUT"
-import { motion } from "framer-motion"
 import { useModelContext } from "../../context/Context"
 
 const defaultSettingsOptions = [
@@ -23,13 +23,11 @@ export default function SettingsPage() {
   const { email } = useModelContext() // Only email is available from context
   const [isAdmin, setIsAdmin] = useState(false)
 
-  // Using GET method to fetch user data and check if the user is an admin
   useEffect(() => {
     if (email) {
       fetch(`/api/users?email=${email}`)
         .then((res) => res.json())
         .then((data) => {
-          // Assuming your API returns a single user object with an "admin" field
           console.log(data)
           setIsAdmin(data.admin)
         })
@@ -42,7 +40,7 @@ export default function SettingsPage() {
   if (isAdmin) {
     settingsOptions.push({ name: "Admin Panel", href: "/admin" })
   }
-console.log(isAdmin)
+
   useEffect(() => {
     const scriptUrl = "https://checkout.razorpay.com/v1/checkout.js"
     if (!document.querySelector(`script[src="${scriptUrl}"]`)) {
@@ -90,6 +88,9 @@ console.log(isAdmin)
     }
   }
 
+  // Create a motion version of Link
+  const MotionLink = motion(Link)
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -120,17 +121,16 @@ console.log(isAdmin)
                 {loading ? "Processing..." : option.name}
               </motion.button>
             ) : (
-              <Link href={option.href} passHref>
-                <motion.a
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.98 }}
-                  className={`block p-4 rounded-lg shadow-md text-center text-lg font-medium transition-colors ${
-                    pathname === option.href ? "bg-blue-600 text-white" : "bg-white text-gray-800 hover:bg-blue-50"
-                  }`}
-                >
-                  {option.name}
-                </motion.a>
-              </Link>
+              <MotionLink
+                href={option.href}
+                className={`block p-4 rounded-lg shadow-md text-center text-lg font-medium transition-colors ${
+                  pathname === option.href ? "bg-blue-600 text-white" : "bg-white text-gray-800 hover:bg-blue-50"
+                }`}
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                {option.name}
+              </MotionLink>
             )}
           </motion.div>
         ))}

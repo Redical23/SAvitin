@@ -17,31 +17,25 @@ export default function Page() {
   const [showSidebar, setShowSidebar] = useState(false);
   const socketRef = useRef(null);
 
-  // Initialize WebSocket and listen for new messages
+  // Initialize the socket once when decodedEmail is available.
   useEffect(() => {
-    if (!decodedEmail || !currentchat) return;
+    if (!decodedEmail) return;
     if (!socketRef.current) {
       socketRef.current = initializeSocket();
+      socketRef.current.on("receive_message", (message) => {
+        setMessages((prev) => [...prev, message]);
+      });
     }
-    socketRef.current.on("connect", () => {
-      const room = `${decodedEmail}_${currentchat}`;
-      joinRoom(room);
-    });
-    socketRef.current.on("disconnect", () => {
-      socketRef.current = null;
-    });
-    socketRef.current.on("receive_message", (message) => {
-      setMessages((prev) => [...prev, message]);
-    });
+    // Cleanup only on unmount.
     return () => {
       if (socketRef.current) {
         socketRef.current.disconnect();
         socketRef.current = null;
       }
     };
-  }, [decodedEmail, currentchat]);
+  }, [decodedEmail]);
 
-  // Fetch messages when switching chat rooms
+  // Join the chat room and fetch messages when currentchat changes.
   useEffect(() => {
     if (!decodedEmail || !currentchat) return;
     const room = `${decodedEmail}_${currentchat}`;
@@ -65,7 +59,7 @@ export default function Page() {
     fetchMessages();
   }, [decodedEmail, currentchat]);
 
-  // Handle sending messages
+  // Handle sending messages.
   const handleSendMessage = useCallback(
     async (content) => {
       if (!currentchat || !decodedEmail) return;
@@ -96,12 +90,8 @@ export default function Page() {
 
   return (
     <div className="flex flex-col min-h-screen ">
-      {/* Header */}
       <LAHEAD />
-
-      {/* Main Content */}
       <main className="flex flex-1 overflow-hidden px-4 py-6 md:px-8 md:py-8">
-        {/* Mobile Toggle for Sidebar */}
         <div className="md:hidden mb-4">
           <button
             onClick={() => setShowSidebar((prev) => !prev)}
@@ -110,22 +100,14 @@ export default function Page() {
             {showSidebar ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
-
         <div className="flex flex-1 rounded-lg overflow-hidden shadow-lg">
-          {/* Sidebar */}
           <div className={`${showSidebar ? "block" : "hidden"} md:block w-full md:w-80 border-r`}>
             <Sidebar />
           </div>
-
-          {/* Chat Section */}
           {currentchat ? (
             <div className="flex flex-col flex-1">
               <ChatHeader />
-              {/* Chat messages container with a maximum height */}
-              <div
-                className="flex-1 overflow-y-auto p-4 space-y-4"
-                style={{ maxHeight: "calc(100vh - 250px)" }}
-              >
+              <div className="flex-1 overflow-y-auto p-4 space-y-4" style={{ maxHeight: "calc(100vh - 250px)" }}>
                 {messages.length === 0 ? (
                   <div className="flex items-center justify-center h-full text-gray-500">
                     <p>No messages yet. Start a conversation!</p>
@@ -153,8 +135,6 @@ export default function Page() {
           )}
         </div>
       </main>
-
-      {/* Footer */}
       <Footer />
     </div>
   );

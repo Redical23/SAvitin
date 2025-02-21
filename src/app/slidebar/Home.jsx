@@ -6,7 +6,6 @@ import { Zap, Users, DollarSign, Wallet, Clock, UserCog, Search } from 'lucide-r
 import loge1 from '../IMAGES/Screenshot 2024-12-29 215027.png'
 import loge2 from '../IMAGES/properaidpic.png'
 import loge3 from '../IMAGES/Screenshot 2024-12-29 215214.png'
-import { useState as useReactState } from 'react'
 import { useRouter } from "next/navigation"
 import { motion, AnimatePresence } from 'framer-motion'
 import { useSession } from 'next-auth/react'
@@ -67,7 +66,6 @@ const Home = () => {
     visible: { opacity: 1, y: 0 }
   };
 
-  const [counter, setCounter] = useState(0);
   const [slides, setSlides] = useState([]);
   const router = useRouter();
   const { data: session, status } = useSession()
@@ -123,14 +121,13 @@ const Home = () => {
               <button className="text-white hover:text-gray-300">Contact</button>
             </div>
             <div className="flex space-x-2">
-            {status === "loading" ? (
-  <p>Loading...</p>
-) : session ? (
-  <SIGNOUT />
-) : (
-  <button onClick={() => router.push("/Login")}>Login</button>
-)}
-
+              {status === "loading" ? (
+                <p>Loading...</p>
+              ) : session ? (
+                <SIGNOUT />
+              ) : (
+                <button onClick={() => router.push("/Login")}>Login</button>
+              )}
             </div>
           </div>
 
@@ -301,7 +298,6 @@ Direct Contact Option: Some lawyers also provide their phone numbers, giving you
           </div>
         </div>
       </section>
-     
     </div>
   )
 }

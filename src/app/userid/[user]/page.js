@@ -5,11 +5,27 @@ import Link from "next/link";
 import TrackVisit from "../../slidebar/TrackVisit";
 import Footer from "../../slidebar/FOOTER";
 
-async function getUserData(id) {
+// Implement connection pooling by caching the client and database instance
+let cachedClient = null;
+let cachedDb = null;
+
+async function connectToDatabase() {
+  if (cachedClient && cachedDb) {
+    return { client: cachedClient, db: cachedDb };
+  }
+  if (!process.env.MONGODB_URI) {
+    throw new Error("Please define the MONGODB_URI environment variable");
+  }
   const client = await MongoClient.connect(process.env.MONGODB_URI);
   const db = client.db();
+  cachedClient = client;
+  cachedDb = db;
+  return { client, db };
+}
+
+async function getUserData(id) {
+  const { db } = await connectToDatabase();
   const user = await db.collection("users").findOne({ _id: new ObjectId(id) });
-  client.close();
   return user;
 }
 
@@ -25,7 +41,7 @@ export default async function LawyerProfilePage({ params }) {
     );
   }
 
-  // Convert to plain object to remove non-plain fields (like ObjectId with toJSON methods)
+  // Convert to a plain object to remove non-plain fields (like ObjectId with toJSON methods)
   const safeUserData = JSON.parse(JSON.stringify(userData));
   const { name, email, yearsexp, charge, rating, avatar, recentCases, bio, areasOfPractice, location, phone } = safeUserData;
   
