@@ -30,7 +30,7 @@ export const ChatHeader = () => {
     };
     fetchUserData();
   }, [decodedEmail]);
-
+ 
   const handleDelete = async () => {
     if (!decodedEmail) {
       setDeleteError("No chat to delete.");

@@ -27,6 +27,9 @@ export const initializeSocket = () => {
 };
 
 export const joinRoom = (room) => {
+  if (!socket) {
+    socket = initializeSocket();
+  }
   if (socket) {
     socket.emit("join_room", room);
     console.log("🏠 Joined room:", room);
@@ -36,6 +39,9 @@ export const joinRoom = (room) => {
 };
 
 export const sendMessage = (message, room) => {
+  if (!socket) {
+    socket = initializeSocket();
+  }
   if (socket) {
     socket.emit("send_message", { message, room });
     console.log("📤 Sent message to room:", room, message);
@@ -45,6 +51,9 @@ export const sendMessage = (message, room) => {
 };
 
 export const onMessage = (callback) => {
+  if (!socket) {
+    socket = initializeSocket();
+  }
   if (socket) {
     socket.off("receive_message");
     socket.on("receive_message", (data) => {

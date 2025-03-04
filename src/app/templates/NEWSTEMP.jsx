@@ -56,7 +56,7 @@ const NEWSTEMP = ({ news }) => {
                   <div className="relative h-48 overflow-hidden">
                     <Image 
                       src={newsItem.image || "/placeholder.svg"}
-                      alt={newsItem.title}
+                      alt={newsItem.title||""}
                       fill
                       className="object-cover transition-transform duration-500 group-hover:scale-110"
                     />

@@ -93,9 +93,12 @@ console.log(currentLawyer,"sd")
             >
               View Profile
             </Link>
-            <button className="flex-1 border border-[#E0E7FF] hover:bg-[#162447] text-white font-bold py-2 px-4 rounded-lg transition-all shadow-md">
-              Contact
-            </button>
+            <Link
+  href={`/lawyer/${currentLawyer.email}`}
+  className="flex-1 border border-[#E0E7FF] hover:bg-[#162447] text-white font-bold py-2 px-4 rounded-lg transition-all shadow-md text-center"
+>
+  Contact
+</Link>
           </div>
         </div>
       </div>

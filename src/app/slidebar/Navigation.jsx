@@ -7,7 +7,7 @@ const Navigation = () => {
         { name: 'Home', href: '/pruser/homepage' },
         { name: 'News', href: '/News' },
         { name: 'Constitution', href: '/Constitustion' },
-        { name: 'Internship', href: '/pruser/internship' },
+        { name: 'Student', href: '/pruser/student' },
         { name: 'Chats', href: '/lawyer/chats' },
     ]
     const pathname = usePathname()

@@ -18,16 +18,25 @@ export default function Page() {
   const [showSidebar, setShowSidebar] = useState(false);
   const socketRef = useRef(null);
 
-  // Initialize the socket once when decodedEmail is available.
+  // Use a ref to always have the latest currentchat value
+  const currentChatRef = useRef(currentchat);
+  useEffect(() => {
+    currentChatRef.current = currentchat;
+  }, [currentchat]);
+
+  // Initialize the socket connection once decodedEmail is available.
   useEffect(() => {
     if (!decodedEmail) return;
     if (!socketRef.current) {
       socketRef.current = initializeSocket();
       socketRef.current.on("receive_message", (message) => {
-        setMessages((prev) => [...prev, message]);
+        // Only append messages that belong to the current chat
+        if (message.to === currentChatRef.current) {
+          setMessages((prev) => [...prev, message]);
+        }
       });
     }
-    // Cleanup only on unmount.
+    // Cleanup on unmount.
     return () => {
       if (socketRef.current) {
         socketRef.current.disconnect();
@@ -36,15 +45,21 @@ export default function Page() {
     };
   }, [decodedEmail]);
 
-  // Join the chat room and fetch messages when currentchat changes.
+  // When the room changes, clear messages, join the room, and fetch historical messages.
   useEffect(() => {
     if (!decodedEmail || !currentchat) return;
+
+    // Clear previous messages immediately
+    setMessages([]);
     const room = `${decodedEmail}_${currentchat}`;
     joinRoom(room);
+
     const fetchMessages = async () => {
       try {
         const res = await fetch(
-          `/api/message?lawyer=${encodeURIComponent(decodedEmail)}&client=${encodeURIComponent(currentchat)}`,
+          `/api/message?lawyer=${encodeURIComponent(
+            decodedEmail
+          )}&client=${encodeURIComponent(currentchat)}`,
           { cache: "no-store" }
         );
         const data = await res.json();
@@ -57,7 +72,14 @@ export default function Page() {
         console.error("Failed to fetch messages:", err);
       }
     };
+
+    // Initial fetch immediately
     fetchMessages();
+    // Set up interval to refresh messages every 3 seconds
+    const intervalId = setInterval(fetchMessages, 3000);
+
+    // Cleanup interval when the component unmounts or dependencies change.
+    return () => clearInterval(intervalId);
   }, [decodedEmail, currentchat]);
 
   // Handle sending messages.
@@ -91,7 +113,6 @@ export default function Page() {
 
   return (
     <div className="flex flex-col min-h-screen ">
-     
       <main className="flex flex-1 overflow-hidden px-4 py-6 md:px-8 md:py-8">
         <div className="md:hidden mb-4">
           <button
@@ -108,7 +129,10 @@ export default function Page() {
           {currentchat ? (
             <div className="flex flex-col flex-1">
               <ChatHeader />
-              <div className="flex-1 overflow-y-auto p-4 space-y-4" style={{ maxHeight: "calc(100vh - 250px)" }}>
+              <div
+                className="flex-1 overflow-y-auto p-4 space-y-4"
+                style={{ maxHeight: "calc(100vh - 250px)" }}
+              >
                 {messages.length === 0 ? (
                   <div className="flex items-center justify-center h-full text-gray-500">
                     <p>No messages yet. Start a conversation!</p>
@@ -140,3 +164,4 @@ export default function Page() {
     </div>
   );
 }
+  

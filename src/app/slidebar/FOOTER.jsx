@@ -8,7 +8,7 @@ import { motion } from "framer-motion";
 
 const Footer = () => {
   const router = useRouter();
-    const loge2 = "/properaidpic.png"
+  const loge2 = "/properaidpic.png"
 
   const handleFilterClick = (filter) => {
     router.push(`/pruser/homepage?filter=${filter}`);
@@ -57,48 +57,47 @@ const Footer = () => {
           </motion.div>
 
           <motion.div className="text-center md:text-left" variants={itemVariants}>
-            <h4 className="text-lg font-semibold text-white mb-2">Practice Areas</h4>
-            <nav className="space-y-2">
-              {["Corporate Law",  "Immigration Law", "Criminal Law", "Family Law"].map(
-                (area) => (
-                  <motion.button
-                    key={area}
-                    onClick={() => handleFilterClick(area)}
-                    className="block w-full text-left hover:text-blue-400 transition-colors"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    {area}
-                  </motion.button>
-                )
-              )}
-            </nav>
-          </motion.div>
+  <h4 className="text-lg font-semibold text-white mb-2">Practice Areas</h4>
+  <nav className="flex flex-col items-center sm:items-start space-y-2">
+    {["Corporate Law", "Immigration Law", "Criminal Law", "Family Law"].map((area) => (
+      <motion.button
+        key={area}
+        onClick={() => handleFilterClick(area)}
+        className="w-full text-center sm:text-left hover:text-blue-400 transition-colors"
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+      >
+        {area}
+      </motion.button>
+    ))}
+  </nav>
+</motion.div>
+
 
           <motion.div className="text-center md:text-left" variants={itemVariants}>
             <h4 className="text-lg font-semibold text-white mb-2">Quick Links</h4>
             <nav className="space-y-2">
-  {[
-    { name: "Find a Lawyer", path: "/pruser/homepage" },
-    { name: "About Us", path: "/about" },
-    { name: "Terms of Service", path: "/termsofservice" },
-    { name: "Privacy Policy", path: "/privacypolicy" }
-  ].map((link, index) => (
-    <motion.a
-      key={index}
-      href={link.path}
-      className="block hover:text-blue-400 transition-colors"
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
-    >
-      {link.name}
-    </motion.a>
-  ))}
-</nav>
+              {[
+                { name: "Find a Lawyer", path: "/pruser/homepage" },
+                { name: "About Us", path: "/about" },
+                { name: "Terms of Service", path: "/termsofservice" },
+                { name: "Privacy Policy", path: "/privacypolicy" }
+              ].map((link, index) => (
+                <motion.a
+                  key={index}
+                  href={link.path}
+                  className="block hover:text-blue-400 transition-colors"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  {link.name}
+                </motion.a>
+              ))}
+            </nav>
 
           </motion.div>
 
-          <motion.div className="text-center md:text-left" variants={itemVariants}>
+          <motion.div className="text-center " variants={itemVariants}>
             <h4 className="text-lg font-semibold text-white mb-2">Contact Us</h4>
             <div className="space-y-2">
               <p className="flex items-center justify-center md:justify-start">

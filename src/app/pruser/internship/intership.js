@@ -171,7 +171,7 @@ function InternshipFeed() {
           <Plus size={24} />
         </motion.button>
       </motion.div>
-      <Footer />
+     
     </div>
   );
 }

@@ -122,11 +122,12 @@ const h8 = "/h8.png"
               <span className="text-2xl font-bold">ProperAid</span>
             </div>
             <div className="hidden md:flex space-x-4">
-              <button onClick={() => router.push("/termsofservice")} className="text-white hover:text-gray-300">Terms and Service</button>
-              <button onClick={() => router.push("/privacypolicy")} className="text-white hover:text-gray-300">Privacy policy</button>
-              <button  onClick={() => router.push("/about")} className="text-white hover:text-gray-300">About Us</button>
-              <button  onClick={() => router.push("/contact")} className="text-white hover:text-gray-300">Contact</button>
-            </div>
+  <button onClick={() => router.push("/termsofservice")} className="text-white hover:text-gray-300">Terms and Service</button>
+  <button onClick={() => router.push("/privacypolicy")} className="text-white hover:text-gray-300">Privacy Policy</button>
+  <button onClick={() => router.push("/about")} className="text-white hover:text-gray-300">About Us</button>
+  <button onClick={() => router.push("/contact")} className="text-white hover:text-gray-300">Contact</button>
+</div>
+
             <div className="flex space-x-2">
               {status === "loading" ? (
                 <p>Loading...</p>

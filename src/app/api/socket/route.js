@@ -1,12 +1,17 @@
 // app/api/socket/route.js
+
+export const config = {
+  runtime: "nodejs",
+};
+
 import { Server } from "socket.io";
 import { NextResponse } from "next/server";
 
 if (!global.io) {
   console.log("Initializing Socket.IO server...");
 
-  // Create the Socket.IO server *without* a separate port
   const io = new Server({
+    path: '/api/socket', // <--- custom path for Socket.IO
     cors: {
       origin: "*",
       methods: ["GET", "POST"],
