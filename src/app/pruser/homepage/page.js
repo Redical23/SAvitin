@@ -1,10 +1,8 @@
 "use client";
 export const dynamic = "force-dynamic";
-
 import React, { Suspense, useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-
 import FeaturedLawyer from "../../slidebar/feature-lawyer";
 import LAWYERSSTEMP from "../../templates/LAWYERSTEMP";
 import Footer from "../../slidebar/FOOTER";
@@ -12,6 +10,7 @@ import Footer from "../../slidebar/FOOTER";
 
 const USERS_PER_PAGE = 9;
 const FILTERS = ["All", "Corporate Law", "Immigration Law", "Family Law", "Criminal Law"];
+
 
 function HomepageContent() {
   const searchParams = useSearchParams();
@@ -44,7 +43,7 @@ function HomepageContent() {
 
   // Filtered + paginated users
   const filteredUsers = users.filter(user =>
-    selectedFilter && selectedFilter !== "All" ? user.category === selectedFilter : true
+   selectedFilter && selectedFilter !== "All" ? user.areasOfPractice.includes(selectedFilter) : true
   );
   const totalPages = Math.ceil(filteredUsers.length / USERS_PER_PAGE);
   const start = (page - 1) * USERS_PER_PAGE;
@@ -55,7 +54,7 @@ function HomepageContent() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#020B2C] to-[#0D1B4A]">
+    <div className="min-h-screen min-w-max bg-gradient-to-br from-[#020B2C] to-[#0D1B4A]">
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}

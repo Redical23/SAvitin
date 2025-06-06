@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from "uuid";
 // Define Mongoose schema
 const PostSchema = new mongoose.Schema({
   id: { type: String, required: true, unique: true },  // 🔹 Using UUID for custom ID
-  name: { type: String, required: true }, 
+  name: { type: String, required: true },
   avatar: { type: String, required: true },
   description: { type: String, required: true },
   link: { type: String },
@@ -115,18 +115,18 @@ export async function DELETE(req) {
   await dbconnect();
 
   try {
-    const { id } = await req.json();  // ✅ Expect `id` from the request body
-    console.log("Delete request for:", id);
+    const { email } = await req.json();  // ✅ Expect `email` from the request body
+    console.log("Delete request for:", email);
 
-    if (!id) {
-      return new Response(JSON.stringify({ error: "ID is required." }), {
+    if (!email) {
+      return new Response(JSON.stringify({ error: "Email is required." }), {
         status: 400,
         headers: { "Content-Type": "application/json" },
       });
     }
 
-    // ✅ Correct Deletion Using `id`
-    const deletedPost = await Post.findOneAndDelete({ id });
+    // ✅ Correct Deletion Using `email`
+    const deletedPost = await Post.findOneAndDelete({ email });
 
     if (!deletedPost) {
       return new Response(JSON.stringify({ error: "Post not found." }), {
@@ -139,6 +139,7 @@ export async function DELETE(req) {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
+
   } catch (error) {
     console.error("Error deleting post:", error);
     return new Response(JSON.stringify({ error: "Failed to delete post." }), {

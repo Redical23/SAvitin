@@ -109,7 +109,7 @@ export default function LawyerProfilePage({ params }) {
               <div className="flex items-center justify-between mb-8 pb-8 border-b border-white/10">
                 <div className="flex items-center gap-4">
                   <div>
-                    <div className="font-semibold text-white">{role}</div>
+                    {/* <div className="font-semibold text-white">{role}</div> */}
                     <div className="text-sm text-gray-400">{date}</div>
                   </div>
                 </div>

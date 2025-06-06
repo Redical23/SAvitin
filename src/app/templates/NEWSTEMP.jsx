@@ -82,7 +82,7 @@ const NEWSTEMP = ({ news }) => {
                   </motion.h2>
 
                   <p className="text-gray-400 line-clamp-2">
-                    {newsItem.description}
+                    {newsItem.headline}
                   </p>
                 </div>
 

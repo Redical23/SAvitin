@@ -31,7 +31,8 @@ export default function RootLayout({ children }) {
 
  
   return (
-    <html lang="en">
+    <>
+    <html className="min-w-fit" lang="en">
        <head>
         <link href="https://fonts.googleapis.com/css2?family=Comic+Relief:wght@400;700&display=swap" rel="stylesheet" />
         <link href="https://fonts.googleapis.com/css2?family=Tuffy:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet" />
@@ -52,6 +53,7 @@ export default function RootLayout({ children }) {
         </Sessionwarpper>
       </body>
     </html>
+    </>
   );
 }
 

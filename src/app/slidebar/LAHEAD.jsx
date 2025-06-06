@@ -43,7 +43,7 @@ const LAHEAD = () => {
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center space-x-8">
           <Navigation />
-          {pathname !== "/Constitustion" && <SearchBar />}
+           <SearchBar />
           {/* Avatar & Buttons */}
           <div className="flex items-center space-x-5">
             <button
@@ -74,7 +74,7 @@ const LAHEAD = () => {
       {isMenuOpen && (
         <div className="mt-4 md:hidden bg-gradient-to-r from-[#1E293B] via-[#0F172A] to-[#1E3A8A] p-6 rounded-lg shadow-lg">
           <Navigation />
-          {pathname !== "/Constitustion" && <SearchBar />}
+          <SearchBar />
           <div className="mt-5 flex flex-col space-y-4">
             <button
               className="w-12 h-12 rounded-full overflow-hidden border-2 border-[#FFB400] shadow-md"

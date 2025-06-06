@@ -56,7 +56,7 @@ export function InternshipPost({
       const res = await fetch("/api/posts", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id: _id }),
+        body: JSON.stringify({ email }),
       });
 
       const data = await res.json();

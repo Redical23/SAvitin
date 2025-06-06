@@ -1,80 +1,85 @@
-import React, { useState, useEffect } from "react";
-import { Scale, Trash } from "lucide-react";
-import { useModelContext } from "../../context/Context";
+"use client"
+
+import { useState, useEffect } from "react"
+import { Scale, MessageSquareX } from "lucide-react"
+import { useModelContext } from "../../context/Context"
 
 export const ChatHeader = () => {
-  const { currentchat } = useModelContext();
-  const [user, setUser] = useState(null);
-  const [error, setError] = useState(null);
-  const [deleting, setDeleting] = useState(false);
-  const [deleteError, setDeleteError] = useState(null);
-  const [deleted, setDeleted] = useState(false);
-  const decodedEmail = currentchat ? decodeURIComponent(currentchat) : null;
-  console.log(currentchat, "Current chat in header");
+  const { currentchat, setcurrentchat } = useModelContext()
+  const [user, setUser] = useState(null)
+  const [error, setError] = useState(null)
+  const [clearingMessages, setClearingMessages] = useState(false)
+  const [clearError, setClearError] = useState(null)
+  const [messagesCleared, setMessagesCleared] = useState(false)
+  const decodedEmail = currentchat ? decodeURIComponent(currentchat) : null
+  console.log(currentchat, "Current chat in header")
 
   useEffect(() => {
     const fetchUserData = async () => {
-      if (!decodedEmail) return;
+      if (!decodedEmail) return
       try {
-        const res = await fetch(`/api/users?email=${encodeURIComponent(decodedEmail)}`, { method: "GET" });
-        const data = await res.json();
+        const res = await fetch(`/api/users?email=${encodeURIComponent(decodedEmail)}`, { method: "GET" })
+        const data = await res.json()
         if (res.ok) {
-          setUser(data);
+          setUser(data)
         } else {
-          throw new Error(data.error || "Failed to fetch user data");
+          throw new Error(data.error || "Failed to fetch user data")
         }
       } catch (error) {
-        console.error("Error fetching user data:", error);
-        setError(error.message);
+        console.error("Error fetching user data:", error)
+        setError(error.message)
       }
-    };
-    fetchUserData();
-  }, [decodedEmail]);
- 
-  const handleDelete = async () => {
-    if (!decodedEmail) {
-      setDeleteError("No chat to delete.");
-      return;
     }
-    setDeleting(true);
-    setDeleteError(null);
+    fetchUserData()
+  }, [decodedEmail])
+
+  const handleClearMessages = async () => {
+    if (!decodedEmail) {
+      setClearError("No chat to clear.")
+      return
+    }
+    setClearingMessages(true)
+    setClearError(null)
+    setMessagesCleared(false)
     try {
-      const res = await fetch("/api/message", {
+      const res = await fetch("/api/message/clear", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           lawyer: user.email,
           clientEmail: decodedEmail,
         }),
-      });
-      const data = await res.json();
+      })
+      const data = await res.json()
       if (res.ok) {
-        setDeleted(true);
-        console.log("Chat deleted successfully:", data);
+        setMessagesCleared(true)
+        console.log("Messages cleared successfully:", data)
+        // Auto-hide success message after 3 seconds
+        setTimeout(() => setMessagesCleared(false), 3000)
       } else {
-        throw new Error(data.error || "Failed to delete chat");
+        throw new Error(data.error || "Failed to clear messages")
       }
     } catch (error) {
-      console.error("Error deleting chat:", error);
-      setDeleteError(error.message);
+      console.error("Error clearing messages:", error)
+      setClearError(error.message)
     } finally {
-      setDeleting(false);
+      setClearingMessages(false)
     }
-  };
+  }
 
   if (error) {
-    return <div className="text-red-500 p-4">Error: {error}</div>;
+    return <div className="text-red-500 p-4">Error: {error}</div>
   }
   if (!user) {
-    return <div className="text-gray-400 p-4">Loading...</div>;
+    return <div className="text-gray-400 p-4">Loading...</div>
   }
-  const { name, avatar, status, caseNumber, isLawyer } = user;
+  const { name, avatar, status, caseNumber, isLawyer } = user
 
   return (
-    <div className="flex items-center justify-between p-4 bg-[#001845] border-b border-gray-700">
+    <div className="relative flex items-center justify-between p-4 bg-[#001845] border-b border-gray-700">
       <div className="flex items-center gap-3">
         <div className="relative">
-          <img src={avatar} alt={name} className="w-10 h-10 rounded-full object-cover" />
+          <img src={avatar || "/placeholder.svg"} alt={name} className="w-10 h-10 rounded-full object-cover" />
           {isLawyer && (
             <div className="absolute -top-1 -right-1 bg-blue-500 rounded-full p-1">
               <Scale className="w-3 h-3 text-white" />
@@ -87,17 +92,28 @@ export const ChatHeader = () => {
           <p className="text-sm text-gray-400">{status}</p>
         </div>
       </div>
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2">
         <button
-          onClick={handleDelete}
-          disabled={deleting}
-          className={`p-2 hover:bg-[#B00020] rounded-full transition-colors ${deleting ? "opacity-50" : ""}`}
+          onClick={handleClearMessages}
+          disabled={clearingMessages}
+          className={`p-2 hover:bg-orange-600 rounded-full transition-colors ${clearingMessages ? "opacity-50" : ""}`}
+          title="Clear chat messages"
         >
-          {deleting ? <span className="text-white">Deleting...</span> : <Trash className="w-5 h-5 text-white" />}
+          {clearingMessages ? (
+            <span className="text-white text-xs">Clearing...</span>
+          ) : (
+            <MessageSquareX className="w-5 h-5 text-white" />
+          )}
         </button>
       </div>
-      {deleteError && <div className="text-red-500 p-2">{deleteError}</div>}
-      {deleted && <div className="text-green-500 p-2">Chat deleted successfully! Please refresh the page.</div>}
+      {clearError && (
+        <div className="absolute top-full left-0 right-0 bg-red-500 text-white p-2 text-sm">{clearError}</div>
+      )}
+      {messagesCleared && (
+        <div className="absolute top-full left-0 right-0 bg-green-500 text-white p-2 text-sm">
+          Chat messages cleared successfully!
+        </div>
+      )}
     </div>
-  );
-};
+  )
+}

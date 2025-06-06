@@ -1,176 +1,231 @@
-"use client";
-import { useState, useEffect, useRef, useCallback } from "react";
-import Sidebar from "../component/Sidebar";
-import { useModelContext } from "../../context/Context";
-import ChatMessage from "../component/ChatMessage";
-import { ChatInput } from "../component/ChatInput";
-import LAHEAD from "../../slidebar/LAHEAD";
-import { ChatHeader } from "../component/ChatHeader";
-import { initializeSocket, joinRoom, sendMessage } from "../../../lib/socket";
-import { Menu, X } from "lucide-react";
-import dynamic from "next/dynamic";
+"use client"
+import { useState, useEffect, useRef, useCallback } from "react"
+import Sidebar from "../component/Sidebar"
+import { useModelContext } from "../../context/Context"
+import ChatMessage from "../component/ChatMessage"
+import { ChatInput } from "../component/ChatInput"
+import { ChatHeader } from "../component/ChatHeader"
+import { initializeSocket, joinRoom, sendMessage } from "../../../lib/socket"
+import { Menu, X } from "lucide-react"
+import dynamic from "next/dynamic"
 
 export default function Page() {
-  const { email, currentchat } = useModelContext();
-  const Footer = dynamic(() => import("../../slidebar/FOOTER"), { ssr: false });
-  const decodedEmail = email ? decodeURIComponent(email) : null;
-  const [messages, setMessages] = useState([]);
-  const [showSidebar, setShowSidebar] = useState(false);
-  const socketRef = useRef(null);
-  const messagesEndRef = useRef(null);
-  const chatContainerRef = useRef(null);
+  const { email, currentchat } = useModelContext()
+  const Footer = dynamic(() => import("../../slidebar/FOOTER"), { ssr: false })
+  const decodedEmail = email ? decodeURIComponent(email) : null
+  const [messages, setMessages] = useState([])
+  const [showSidebar, setShowSidebar] = useState(false)
+  const socketRef = useRef(null)
+  const messagesEndRef = useRef(null)
+  const chatContainerRef = useRef(null)
 
   // Use a ref to always have the latest currentchat value
-  const currentChatRef = useRef(currentchat);
+  const currentChatRef = useRef(currentchat)
   useEffect(() => {
-    currentChatRef.current = currentchat;
-  }, [currentchat]);
+    currentChatRef.current = currentchat
+  }, [currentchat])
 
   // Initialize the socket connection once decodedEmail is available.
   useEffect(() => {
-    if (!decodedEmail) return;
+    if (!decodedEmail) return
     if (!socketRef.current) {
-      socketRef.current = initializeSocket();
+      socketRef.current = initializeSocket()
       socketRef.current.on("receive_message", (message) => {
         // Only append messages that belong to the current chat
         if (message.to === currentChatRef.current) {
-          setMessages((prev) => [...prev, message]);
+          setMessages((prev) => [...prev, message])
         }
-      });
+      })
     }
     // Cleanup on unmount.
     return () => {
       if (socketRef.current) {
-        socketRef.current.disconnect();
-        socketRef.current = null;
+        socketRef.current.disconnect()
+        socketRef.current = null
       }
-    };
-  }, [decodedEmail]);
+    }
+  }, [decodedEmail])
 
   // When the room changes, clear messages, join the room, and fetch historical messages.
   useEffect(() => {
-    if (!decodedEmail || !currentchat) return;
+    if (!decodedEmail || !currentchat) return
 
     // Clear previous messages immediately
-    setMessages([]);
-    const room = `${decodedEmail}_${currentchat}`;
-    joinRoom(room);
+    setMessages([])
+    const room = `${decodedEmail}_${currentchat}`
+    joinRoom(room)
 
-    let isMounted = true;
+    let isMounted = true
     const fetchMessages = async () => {
       try {
         const res = await fetch(
-          `/api/message?lawyer=${encodeURIComponent(
-            decodedEmail
-          )}&client=${encodeURIComponent(currentchat)}`,
-          { cache: "no-store" }
-        );
-        const data = await res.json();
+          `/api/message?lawyer=${encodeURIComponent(decodedEmail)}&client=${encodeURIComponent(currentchat)}`,
+          { cache: "no-store" },
+        )
+        const data = await res.json()
         if (res.ok && isMounted) {
           // Compare messages to avoid unnecessary re-renders
-          setMessages(prevMessages => {
-            if (prevMessages.length === data.messages?.length && 
-                JSON.stringify(prevMessages) === JSON.stringify(data.messages)) {
-              return prevMessages;
+          setMessages((prevMessages) => {
+            if (
+              prevMessages.length === data.messages?.length &&
+              JSON.stringify(prevMessages) === JSON.stringify(data.messages)
+            ) {
+              return prevMessages
             }
-            return data.messages || [];
-          });
+            return data.messages || []
+          })
         } else if (isMounted) {
-          console.error("Error fetching messages:", data.error);
+          console.error("Error fetching messages:", data.error)
         }
       } catch (err) {
         if (isMounted) {
-          console.error("Failed to fetch messages:", err);
+          console.error("Failed to fetch messages:", err)
         }
       }
-    };
+    }
 
     // Initial fetch immediately
-    fetchMessages();
+    fetchMessages()
     // Set up interval to refresh messages every 3 seconds
-    const intervalId = setInterval(fetchMessages, 3000);
+    const intervalId = setInterval(fetchMessages, 3000)
 
     // Cleanup interval when the component unmounts or dependencies change.
     return () => {
-      isMounted = false;
-      clearInterval(intervalId);
-    };
-  }, [decodedEmail, currentchat]);
+      isMounted = false
+      clearInterval(intervalId)
+    }
+  }, [decodedEmail, currentchat])
 
   // Handle sending messages.
   const handleSendMessage = useCallback(
     async (content) => {
-      if (!currentchat || !decodedEmail) return;
+      if (!currentchat || !decodedEmail) return
       const messageData = {
         from: decodedEmail,
         to: currentchat,
         content: content.trim(),
         timestamp: new Date().toISOString(),
-      };
-      setMessages((prev) => [...prev, { ...messageData, isSent: true }]);
+      }
+      setMessages((prev) => [...prev, { ...messageData, isSent: true }])
       try {
         const res = await fetch("/api/message", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(messageData),
-        });
+        })
         if (!res.ok) {
-          const error = await res.json();
-          throw new Error(error.error || "Failed to send message");
+          const error = await res.json()
+          throw new Error(error.error || "Failed to send message")
         }
-        sendMessage(messageData, `${decodedEmail}_${currentchat}`);
+        sendMessage(messageData, `${decodedEmail}_${currentchat}`)
       } catch (error) {
-        console.error("Error sending message:", error);
+        console.error("Error sending message:", error)
       }
     },
-    [currentchat, decodedEmail]
-  );
+    [currentchat, decodedEmail],
+  )
+
+  // Handle deleting a specific message
+  const handleDeleteMessage = useCallback(async (messageId) => {
+    try {
+      const res = await fetch(`/api/message/${messageId}`, {
+        method: "DELETE",
+      })
+
+      const data = await res.json()
+
+      if (!res.ok) {
+        throw new Error(data.error || "Failed to delete message")
+      }
+
+      // Update local messages state by filtering out the deleted message
+      setMessages((prevMessages) => {
+        const updatedMessages = prevMessages.filter((msg) => (msg._id || msg.id) !== messageId)
+        return updatedMessages
+      })
+
+      console.log("Message deleted successfully")
+    } catch (error) {
+      console.error("Error deleting message:", error)
+    }
+  }, [])
+
+  // Handle editing a specific message
+  const handleEditMessage = useCallback(async (messageId, newContent) => {
+    try {
+      const res = await fetch(`/api/message/${messageId}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ content: newContent }),
+      })
+
+      const data = await res.json()
+
+      if (!res.ok) {
+        throw new Error(data.error || "Failed to update message")
+      }
+
+      // Update local messages state with the edited content
+      setMessages((prevMessages) => {
+        const updatedMessages = prevMessages.map((msg) =>
+          (msg._id || msg.id) === messageId ? { ...msg, content: newContent } : msg,
+        )
+        return updatedMessages
+      })
+
+      console.log("Message updated successfully")
+    } catch (error) {
+      console.error("Error updating message:", error)
+    }
+  }, [])
 
   // Maintain scroll position during re-renders
   const scrollToBottom = useCallback(() => {
     if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" })
     }
-  }, []);
+  }, [])
 
   useEffect(() => {
     if (messages.length > 0) {
-      scrollToBottom();
+      scrollToBottom()
     }
-  }, [messages, scrollToBottom]);
+  }, [messages, scrollToBottom])
 
   // Preserve scroll position during polling updates
   useEffect(() => {
-    const chatContainer = chatContainerRef.current;
-    if (!chatContainer) return;
+    const chatContainer = chatContainerRef.current
+    if (!chatContainer) return
 
-    let prevScrollHeight = chatContainer.scrollHeight;
-    let prevScrollTop = chatContainer.scrollTop;
-    let prevClientHeight = chatContainer.clientHeight;
-    let wasAtBottom = prevScrollTop + prevClientHeight >= prevScrollHeight - 10;
+    let prevScrollHeight = chatContainer.scrollHeight
+    let prevScrollTop = chatContainer.scrollTop
+    let prevClientHeight = chatContainer.clientHeight
+    let wasAtBottom = prevScrollTop + prevClientHeight >= prevScrollHeight - 10
 
     const observer = new MutationObserver(() => {
-      const newScrollHeight = chatContainer.scrollHeight;
-      
+      const newScrollHeight = chatContainer.scrollHeight
+
       if (newScrollHeight !== prevScrollHeight) {
         if (wasAtBottom) {
           // If user was at bottom, keep them at bottom
-          chatContainer.scrollTop = newScrollHeight;
+          chatContainer.scrollTop = newScrollHeight
         } else {
           // Otherwise maintain relative scroll position
-          chatContainer.scrollTop = prevScrollTop + (newScrollHeight - prevScrollHeight);
+          chatContainer.scrollTop = prevScrollTop + (newScrollHeight - prevScrollHeight)
         }
-        
-        prevScrollHeight = newScrollHeight;
-        prevScrollTop = chatContainer.scrollTop;
-        prevClientHeight = chatContainer.clientHeight;
-        wasAtBottom = prevScrollTop + prevClientHeight >= prevScrollHeight - 10;
-      }
-    });
 
-    observer.observe(chatContainer, { childList: true, subtree: true });
-    return () => observer.disconnect();
-  }, [currentchat]);
+        prevScrollHeight = newScrollHeight
+        prevScrollTop = chatContainer.scrollTop
+        prevClientHeight = chatContainer.clientHeight
+        wasAtBottom = prevScrollTop + prevClientHeight >= prevScrollHeight - 10
+      }
+    })
+
+    observer.observe(chatContainer, { childList: true, subtree: true })
+    return () => observer.disconnect()
+  }, [currentchat])
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -193,9 +248,9 @@ export default function Page() {
               <div
                 ref={chatContainerRef}
                 className="flex-1 overflow-y-auto p-4 space-y-4"
-                style={{ 
+                style={{
                   maxHeight: "calc(100vh - 250px)",
-                  overscrollBehavior: "contain" 
+                  overscrollBehavior: "contain",
                 }}
               >
                 {messages.length === 0 ? (
@@ -207,9 +262,12 @@ export default function Page() {
                     {messages.map((message, index) => (
                       <ChatMessage
                         key={message.id || message._id || `${message.timestamp}-${index}`}
+                        id={message._id || message.id} // Add message ID
                         content={message.content}
                         timestamp={message.timestamp}
                         isSent={message.from === decodedEmail}
+                        onDelete={handleDeleteMessage} // Add delete handler
+                        onEdit={handleEditMessage} // Add edit handler
                       />
                     ))}
                     <div ref={messagesEndRef} />
@@ -230,5 +288,5 @@ export default function Page() {
       </main>
       <Footer />
     </div>
-  );
+  )
 }

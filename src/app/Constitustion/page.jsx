@@ -20,7 +20,7 @@ const Page = () => {
   }, []);
 
   const filterCases = (caseType) => {
-    const filtered = newss.filter(item => item.filler === caseType);
+     const filtered = newss.filter(item => item.caseType === caseType);
     setFilteredUsers(filtered);
     setPage(1); // Reset to first page after filtering
   };

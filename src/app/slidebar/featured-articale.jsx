@@ -95,7 +95,7 @@ export default function FeaturedArticle() {
           </div>
 
           <p className="text-lg text-white/80 mb-6 max-w-2xl">
-            {article.description}
+            {article.headline}
           </p>
 
           <div className="flex items-center gap-4">

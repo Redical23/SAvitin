@@ -238,19 +238,7 @@ const Page = () => {
             </div>
           </div>
           {/* New Username field */}
-          <div className="space-y-2 mt-6">
-            <label htmlFor="username" className="block text-sm font-medium text-gray-700">
-              Username
-            </label>
-            <input
-              id="username"
-              name="username"
-              type="text"
-              value={formData.username}
-              onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded"
-            />
-          </div>
+          
 
           <div>
             <label className="block text-sm font-medium text-gray-700">Charge (in INR)</label>
