@@ -16,7 +16,7 @@ const globalStyles = {
 
 const Home = () => {
   const loge2 = "/22.png"
-  const h1 = "/profile.png"
+  const h1 = "/contacts.png"
   const h2 = "/Benefit.png"
   const h3 = "/News.png"
   const h4 = "/Intership.png"

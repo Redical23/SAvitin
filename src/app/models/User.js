@@ -54,7 +54,6 @@ const UserSchema = new mongoose.Schema(
       required: [true, "Password is required!"],
       index: true, 
     },
-    // Only bookmark field added here
     bookmarks: {
       type: [String],
       default: [],
@@ -67,8 +66,17 @@ const UserSchema = new mongoose.Schema(
     notificationsEnabled: { type: Boolean, default: true },
     resetPasswordExpires: { type: Date },
     admin: { type: Boolean, default: false }, 
-    islaywer: { type: Boolean, default: false }
-    
+    islaywer: { type: Boolean, default: false },
+
+    // ✅ New field for storing subscription traction data as array of objects
+    subscriptions: [
+      {
+        orderId: { type: String },
+        email: { type: String },
+        subscribe: { type: Boolean },
+        subscriptionExpiry: { type: Date },
+      },
+    ],
   },
   { timestamps: true }
 );

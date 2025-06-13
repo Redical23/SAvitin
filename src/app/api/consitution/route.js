@@ -43,3 +43,78 @@ export async function POST(req) {
     });
   }
 }
+
+
+export async function DELETE(req) {
+  await dbConnect()
+
+  try {
+    const { searchParams } = new URL(req.url)
+    const id = searchParams.get("id")
+
+    if (!id) {
+      return new Response(JSON.stringify({ error: "Document ID is required" }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      })
+    }
+
+    const deletedDocument = await constitution.findByIdAndDelete(id)
+
+    if (!deletedDocument) {
+      return new Response(JSON.stringify({ error: "Document not found" }), {
+        status: 404,
+        headers: { "Content-Type": "application/json" },
+      })
+    }
+
+    return new Response(JSON.stringify({ message: "Document deleted successfully" }), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    })
+  } catch (error) {
+    return new Response(JSON.stringify({ error: "Failed to delete document", details: error.message }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    })
+  }
+}
+
+export async function PUT(req) {
+  await dbConnect()
+
+  try {
+    const { searchParams } = new URL(req.url)
+    const id = searchParams.get("id")
+    const body = await req.json()
+
+    if (!id) {
+      return new Response(JSON.stringify({ error: "Document ID is required" }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      })
+    }
+
+    const updatedDocument = await constitution.findByIdAndUpdate(id, body, {
+      new: true,
+      runValidators: true,
+    })
+
+    if (!updatedDocument) {
+      return new Response(JSON.stringify({ error: "Document not found" }), {
+        status: 404,
+        headers: { "Content-Type": "application/json" },
+      })
+    }
+
+    return new Response(JSON.stringify(updatedDocument), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    })
+  } catch (error) {
+    return new Response(JSON.stringify({ error: "Failed to update document", details: error.message }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    })
+  }
+}

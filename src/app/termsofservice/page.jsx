@@ -1,117 +1,411 @@
-'use client';
-
-import React from 'react';
+"use client"
+import { ArrowLeft } from "lucide-react"
+import { useRouter } from "next/navigation"
 
 const TermsOfService = () => {
+  const router = useRouter()
+
   return (
-    <div className="min-h-screen bg-gray-100 text-gray-900 py-16 px-6">
-      <div className="max-w-5xl mx-auto bg-white shadow-md rounded-lg p-8">
-        <h1 className="text-4xl font-bold text-gray-800 text-center mb-8">Terms of Service</h1>
-        
-        <div className="space-y-6 text-gray-700">
-          <p className="leading-relaxed">
-            <strong>2. Terms of Use</strong>
-            <br />PURPOSE:
-            Proper Aid is intended only to serve as a preliminary medium of contact and exchange of information for its users / members / visitors who have a bona fide intention to contact and/or be contacted for the purposes related to genuine existing job vacancies and for other career enhancement services.
-            <br />The site is a public site with free access and Info Edge assumes no liability for the quality and genuineness of responses. Info Edge (India) Ltd. cannot monitor the responses that a person may receive in response to information he/she has displayed on the site. The individual/company would have to conduct its own background checks on the bonafide nature of all response(s).
-            <br />You give us permission to use the information about actions that you have taken on Proper Aid in connection with ads, offers and other content (whether sponsored or not) that we display across our services, without any compensation to you. We use data and information about you to make relevant suggestions and recommendation to you and others.
-            <br />The platform may contain links to third party websites, these links are provided solely as convenience to You and the presence of these links should not under any circumstances be considered as an endorsement of the contents of the same, if You chose to access these websites you do so at your own risk.
-            <br />Users are required to use the site for lawful and ethical reasons only.
-            <br />Misrepresentation of information or the use of fake accounts is not allowed.
-            <br />Any user who is involved in illegal behavior can have their account suspended without warning.
+    <div className="max-w-4xl mx-auto py-8 px-4 bg-white">
+      <div className="mb-8">
+        <button onClick={() => router.back()} className="flex items-center text-blue-600 hover:text-blue-800">
+          <ArrowLeft className="w-4 h-4 mr-2" />
+          Back
+        </button>
+      </div>
+
+      <h1 className="text-3xl font-bold text-orange-600 mb-6">Terms and Conditions</h1>
+
+      <div className="space-y-8">
+        <section>
+          <h2 className="text-xl font-bold mb-4">PURPOSE:</h2>
+          <p className="mb-4">
+            KANOONI KARWAYAHI is designed to serve as a preliminary medium of contact and exchange of information for
+            its users, members, or visitors who have a genuine and bona fide intention to engage in contact for
+            legitimate legal services, legal career enhancement, or knowledge sharing purposes.
           </p>
+        </section>
 
-          <p className="leading-relaxed">
-            <strong>3. Rules for Lawyers</strong>
-            <br />Each attorney is required to supply true and verified information.
-            <br />Attorneys are not supposed to give false or inaccurate information regarding their credentials and experience.
-            <br />Bustide is merely an intermediary platform and will not guarantee any legal service.
+        <section>
+          <h2 className="text-xl font-bold mb-4">USE TO BE IN CONFORMITY WITH THE PURPOSE:</h2>
+          <p className="mb-4">
+            KANOONI KARWAYAHI (including related products and services, whether paid or not) is intended solely for the
+            stated Purpose and for the exclusive use of the subscriber or registered user. Any act of copying,
+            downloading, recreating, sharing passwords, sublicensing, or sharing in a manner not consistent with these
+            terms is considered misuse of the platform, service, or product. KANOONI KARWAYAHI reserves the right to
+            take appropriate action to protect its revenue, reputation, and interests, which may include suspending your
+            access and pursuing legal action for damages. If you are found copying, misusing, or transmitting data,
+            photographs, graphics, or other information on KANOONI KARWAYAHI for purposes other than the stated bona
+            fide Purpose, we reserve the right to take any action deemed appropriate, including stopping access and
+            seeking damages.
           </p>
+        </section>
 
-          <p className="leading-relaxed">
-            <strong>4. Payment and Fees</strong>
-            <br />If any payment facility is being offered on the website, all payments will be made through secure means.
-            <br />Bustide cannot be held liable for any fees by third-party payment gateways.
+        <section>
+          <h2 className="text-xl font-bold mb-4">GENERAL SITE USE:</h2>
+          <p className="mb-4">
+            The site is a public site with free access. KANOONI KARWAYAHI assumes no liability for the authenticity or
+            quality of responses you may receive. It is the responsibility of each user or entity to independently
+            verify the genuineness of all responses and conduct their own background checks.
           </p>
-
-          <p className="leading-relaxed">
-            <strong>5. Privacy and Data Security</strong>
-            <br />User information will be protected and not given to third parties without permission.
-            <br />Communication between attorneys and users will be their sole responsibility.
+          <p className="mb-4">
+            You give us permission to use information about actions you take on KANOONI KARWAYAHI in connection with
+            ads, offers, and other content (whether sponsored or not) displayed across our services, without any
+            compensation to you. We use data and information about you to make relevant suggestions and recommendations
+            to you and others.
           </p>
+        </section>
 
-          <p className="leading-relaxed">
-            <strong>6. Limitation of Liability</strong>
-            <br />Bustide is merely a connecting platform and cannot be held liable for legal advice, disputes, or service quality.
-            <br />Bustide shall not be liable for any loss or disputes arising from platform interactions.
+        <section>
+          <h2 className="text-xl font-bold mb-4">THIRD-PARTY LINKS:</h2>
+          <p className="mb-4">
+            The platform may contain links to third-party websites, provided solely for your convenience. The presence
+            of these links does not imply endorsement of their content. If you choose to access these third-party
+            websites, you do so at your own risk.
           </p>
+        </section>
 
-          <p className="leading-relaxed">
-            <strong>7. Account Suspension and Termination</strong>
-            <br />If a user breaks any terms, they can have their account deleted at any time without notice.
-            <br />The company will have the right to proceed against any acts that are improper.
+        <section>
+          <h2 className="text-xl font-bold mb-4">ACCURACY AND RESPONSIBILITY:</h2>
+          <p className="mb-4">
+            By using this platform, you agree to provide only true and accurate information. If you create a profile,
+            you undertake to keep this information up to date. KANOONI KARWAYAHI is not responsible for inaccuracies in
+            information provided by users, nor does it guarantee the confidentiality of information shared by users or
+            posted on its website or related domains. Users are expected to further research any information presented
+            on the site.
           </p>
-          <p className="leading-relaxed">
-            <strong>23. DISCLAIMER </strong>
-            <br />If You wish to stop this Agreement, you can immediately stop  using the Services
-            <br />Your right to access and use the Platform terminates automatically upon your material breach of any of the terms of these Terms of Use.
+        </section>
+
+        <section>
+          <h2 className="text-xl font-bold mb-4">PRIVACY AND DATA SHARING:</h2>
+          <p className="mb-4">
+            KANOONI KARWAYAHI does not share personally identifiable data of individuals with other companies/entities
+            without obtaining consent, except with agents working on our behalf. We may share information in response to
+            legal processes, such as court orders or subpoenas. You agree not to use the services in a manner that
+            impairs the functioning or interests of KANOONI KARWAYAHI. You agree not to duplicate, download, publish,
+            modify, or distribute material from KANOONI KARWAYAHI unless specifically authorized by us.
           </p>
-          <p className="leading-relaxed">
-            <strong>21. Cancellation:</strong>
-            <br />If You wish to cancel the Proper Aid Agreement, you may immediately using the Services.
+        </section>
 
-            <br />Your right to access and use the Platform terminates automatically upon your material breach of any of the terms of these Terms of Use.
-            <br />Handling of Your Data in the Event of cancellation. You acknowledge and agree that following expiration or cancellation of any of your subscriptions to the Service, we may immediately deactivate the affected services and that user, following a reasonable period of not less than ninety days, we may delete your account and data. However, in the event that the Service or any portion(s) thereof, is terminated by us, we will grant you temporary, limited access to the Service, not to exceed thirty days, for the sole purpose of permitting you to retrieve your proprietary data, provided that you have paid in full all good faith undisputed amounts owed to us. You further agree that we shall not be liable to you or to any third party for any cancellation of your access to the Service or deletion of your data, provided that we are in compliance with the terms of this Section
-            <br />Survival: The disclaimer of warranties, the limitation of liability, indemnity and the jurisdiction and applicable law provisions will survive any cancellation.
-
-
+        <section>
+          <h2 className="text-xl font-bold mb-4">Personal Use Only</h2>
+          <p className="mb-4">
+            Users undertake to use KANOONI KARWAYAHI solely for their personal, legitimate legal purposes. Using content
+            from KANOONI KARWAYAHI for derivative works with a commercial motive without prior written consent from
+            KANOONI KARWAYAHI is strictly prohibited.
           </p>
+        </section>
 
-          <p className="leading-relaxed">
-            <strong>8. Right to Alter</strong>
-            <br />Bustide can change its terms and conditions at any time.
-            <br />Users need to check the website from time to time to be informed about the most recent terms.
-            <br />Users undertake that the services offered by ProperAid/ IEIL shall not be utilized to upload, post, email, transmit or otherwise make available either directly or indirectly, any unsolicited bulk e-mail or unsolicited commercial e-mail. IEIL reserves the right to filter and monitor and block the emails sent by you/user using the servers maintained by IEIL to relay emails. All attempts shall be made by IEIL and the user to abide by International Best Practices in containing and eliminating Spam.
+        <section>
+          <h2 className="text-xl font-bold mb-4">No Spam or Unsolicited Content</h2>
+          <p className="mb-4">
+            Users agree not to use the services offered by KANOONI KARWAYAHI to upload, post, email, transmit, or
+            otherwise make available, either directly or indirectly, any unsolicited bulk email or unsolicited
+            commercial email. KANOONI KARWAYAHI reserves the right to monitor, filter, and block emails sent using our
+            servers to ensure adherence to International Best Practices in controlling and eliminating spam.
           </p>
+        </section>
 
-        
-        <div>Last updated on Feb 17 2025
-
-For the purpose of these Terms and Conditions, The term "we", "us", "our" used anywhere on this page shall mean Rishi Gupta, whose registered/operational office is 7 old lashkar line Allahabad UTTAR PRADESH 211003 . "you", “your”, "user", “visitor” shall mean any natural or legal person who is visiting our website and/or agreed to purchase from us.
-
-Your use of the website and/or purchase from us are governed by following Terms and Conditions:
-
-The content of the pages of this website is subject to change without notice.
-
-Neither we nor any third parties provide any warranty or guarantee as to the accuracy, timeliness, performance, completeness or suitability of the information and materials found or offered on this website for any particular purpose. You acknowledge that such information and materials may contain inaccuracies or errors and we expressly exclude liability for any such inaccuracies or errors to the fullest extent permitted by law.
-
-Your use of any information or materials on our website and/or product pages is entirely at your own risk, for which we shall not be liable. It shall be your own responsibility to ensure that any products, services or information available through our website and/or product pages meet your specific requirements.
-
-Our website contains material which is owned by or licensed to us. This material includes, but are not limited to, the design, layout, look, appearance and graphics. Reproduction is prohibited other than in accordance with the copyright notice, which forms part of these terms and conditions.
-
-All trademarks reproduced in our website which are not the property of, or licensed to, the operator are acknowledged on the website.
-
-Unauthorized use of information provided by us shall give rise to a claim for damages and/or be a criminal offense.
-
-From time to time our website may also include links to other websites. These links are provided for your convenience to provide further information.
-
-You may not create a link to our website from another website or document without Rishi Gupta’s prior written consent.
-
-Any dispute arising out of use of our website and/or purchase with us and/or any engagement with us is subject to the laws of India .
-
-We, shall be under no liability whatsoever in respect of any loss or damage arising directly or indirectly out of the decline of authorization for any Transaction, on Account of the Cardholder having exceeded the preset limit mutually agreed by us with our acquiring bank from time to time</div>
-
-          <p className="leading-relaxed">
-            <strong>19. User Data</strong>
-            <br />User Data. User agree and acknowledge that you are solely responsible for the accuracy, quality, integrity, legality, reliability, and appropriateness of any and all of data, documentation, information, and materials that you add, upload, utilize, interact with, or otherwise access on or through the Service, which concerns or relates to any user of you or your firm  and you agree that any support provided by us in providing the Service is not and will not be construed as a validation or confirmation of the accuracy, quality, integrity, legality, reliability, or appropriateness of any of user Data
-            <br />RABHYAA-RABHAV CORPORATE PVT. LTD. is not and will not be responsible or liable for: (i) the deletion, correction, destruction, and/or damage, to any user data ; or (ii) Your or any User’s collection, use, storage, cross-border transfer, or disclosure of Client Data.
-            <br />Disclosure and Use of user Data. We will never use your  user Data, for any of our own purposes, including marketing. Any such information is encrypted to prevent access by unauthorized parties. You agree that we may share or disclose user  Data as necessary in the event of any reorganization, merger, sale, joint venture, assignment, transfer or other disposition of all or any portion of Company’s business, assets, or stock. You hereby warrant and represent to RABHYAA-RABHAV CORPORATE PVT. LTD. that our receipt of Client Data and our use and/or disclosure of such Client Data in accordance with the terms of this Agreement and the Privacy Policy, will not violate any privacy policy or representation regarding usage of data or disclosures applicable to Client Data; any rights of any other party; or any applicable law, rule, or regulation.   RABHYAA-RABHAV CORPORATE PVT. LTD. is under no obligation to validate, monitor, or review Client Data for any purpose. Notwithstanding the foregoing, we reserve the right to take any steps that we in our sole discretion deem reasonably necessary to enforce and/or verify compliance with this Agreement. Without limiting the foregoing, we may, without notice, except as required by law, and without any liability to you, access, use and/or preserve your account information and/or Client Data and disclose your account information and/or Client Data to law enforcement authorities, government officials and/or any other party as we reasonably believe to be necessary and/or appropriate: (i) if we are required to do so to comply with legal process or governmental request; (ii) to enforce this Agreement; (iii) to detect or prevent security, fraud or technical issues; (iv) to protect the rights, property and/or safety of Company, our Users, you, or any other person; or (v) as permitted by law.
-            <br/>We also reserve the right to notify the appropriate authorities, without prior notice to you or any other party, if we reasonably believe that your Client Data may violate any applicable law, rule, or regulation.  You agree to hold harmless Company from and against any losses, costs, damages liabilities and expenses, and you expressly waive, to the extent permitted under applicable law, any claims that you or any third party may have against us as a result of or arising from any disclosure, investigation or act or omission that we may make in the course of conducting or cooperating with an inspection as set forth in this section. YOU HEREBY CONSENT TO ANY SUCH INSPECTION AND FURTHER AGREE TO KEEP THE FACTS AND DETAILS CONCERNING ANY SUCH INSPECTION CONFIDENTIAL, UNLESS YOU ARE COMPELLED TO DISCLOSE SUCH FACTS AND/OR DETAILS UNDER APPLICABLE LAW
+        <section>
+          <h2 className="text-xl font-bold mb-4">No Excessive Posting or Spamming</h2>
+          <p className="mb-4">
+            Users agree not to spam or indiscriminately and repeatedly post content (such as job listings, legal
+            opportunities, or marketing messages). Any violation of this clause may result in immediate termination of
+            all services without notice and forfeiture of any fees paid.
           </p>
-        </div>
+        </section>
+
+        <section>
+          <h2 className="text-xl font-bold mb-4">Prohibited Content</h2>
+          <p className="mb-4">
+            Users shall not upload, post, transmit, publish, or distribute any material that is unlawful, harmful,
+            threatening, abusive, harassing, defamatory, libelous, vulgar, obscene, racially or ethnically offensive, or
+            otherwise objectionable.
+          </p>
+        </section>
+
+        <section>
+          <h2 className="text-xl font-bold mb-4">Accuracy of Information</h2>
+          <p className="mb-4">
+            Users expressly affirm that any resume, profile, or information they submit to KANOONI KARWAYAHI is correct,
+            complete, and does not contain false, misleading, or manipulated data. KANOONI KARWAYAHI disclaims any
+            liability arising from inaccurate or false information submitted by users. Further, users agree to indemnify
+            KANOONI KARWAYAHI for all losses resulting from false, misleading, or otherwise objectionable information
+            they provide.
+          </p>
+        </section>
+
+        <section>
+          <h2 className="text-xl font-bold mb-4">Account and Transaction Security</h2>
+          <p className="mb-4">
+            Users are solely responsible for maintaining the confidentiality of their account credentials and for all
+            activities conducted under their account. KANOONI KARWAYAHI does not assume any responsibility or liability
+            for any misuse of credit/debit cards or other payment instruments used by the subscriber during online or
+            offline transactions.
+          </p>
+        </section>
+
+        <section>
+          <h2 className="text-xl font-bold mb-4">Compliance with Applicable Laws</h2>
+          <p className="mb-4">
+            Users of KANOONI KARWAYAHI agree to comply with the Information Technology Act, 2000, and all associated
+            rules, regulations, and guidelines while using the platform. Any violation of such laws will make the user
+            solely responsible for the resulting civil or criminal liability.
+          </p>
+        </section>
+
+        <section>
+          <h2 className="text-xl font-bold mb-4">Licenses and Intellectual Property Rights</h2>
+          <p className="mb-4">
+            Users are solely responsible for obtaining, at their own cost, all necessary licenses, permits, consents,
+            approvals, and intellectual property rights required for their use of the Service.
+          </p>
+        </section>
+
+        <section>
+          <h2 className="text-xl font-bold mb-4">User Representations, Warranties, and Restrictions</h2>
+          <p className="mb-4">By using KANOONI KARWAYAHI, you represent, warrant, and agree that you will not:</p>
+          <ul className="list-disc pl-8 space-y-2">
+            <li>
+              Access the platform for the purpose of extracting content to train any machine learning or AI model
+              without prior written permission.
+            </li>
+            <li>Violate any applicable local, state, national, or international laws, statutes, or regulations.</li>
+            <li>Interfere with or disrupt computer networks connected to KANOONI KARWAYAHI.</li>
+            <li>
+              Impersonate any other person or entity, or falsely claim employment by or affiliation with another person
+              or entity.
+            </li>
+            <li>Forge headers or otherwise manipulate identifiers to disguise the origin of user information.</li>
+            <li>
+              Interfere with another user's use of KANOONI KARWAYAHI, including stalking, threatening, or harassing
+              another user.
+            </li>
+            <li>Attempt to gain unauthorized access to the computer systems of others via KANOONI KARWAYAHI.</li>
+            <li>
+              Reproduce, copy, modify, sell, store, distribute, or otherwise exploit KANOONI KARWAYAHI or its content
+              for commercial purposes without express written consent.
+            </li>
+            <li>
+              Use the site or its content to create derivative works for commercial purposes without prior written
+              consent.
+            </li>
+            <li>Use any device, software, or routine to interfere with the proper working of KANOONI KARWAYAHI.</li>
+            <li>Impose an unreasonable or disproportionately large load on KANOONI KARWAYAHI's infrastructure.</li>
+            <li>
+              Spam KANOONI KARWAYAHI by indiscriminately and repeatedly posting content or forwarding mail that may be
+              considered spam.
+            </li>
+            <li>Access data not intended for you or log into accounts you are not authorized to access.</li>
+            <li>
+              Reverse engineer, decompile, disassemble, decipher, or otherwise attempt to derive the source code for any
+              part of the site.
+            </li>
+            <li>Engage in "framing," "mirroring," or otherwise simulating the appearance or function of the site.</li>
+            <li>Probe, scan, or test the vulnerability of a system or network.</li>
+            <li>Use automated or manual means to crawl or scrape content from KANOONI KARWAYAHI.</li>
+            <li>Circumvent technological barriers that prevent automated crawling or scraping.</li>
+            <li>Access KANOONI KARWAYAHI except through the interfaces provided.</li>
+            <li>Attempt to breach security or authentication measures without proper authorization.</li>
+            <li>Provide deep links to KANOONI KARWAYAHI without prior written permission.</li>
+          </ul>
+          <p className="mt-4 mb-4">Host, modify, upload, post, transmit, publish, or distribute material:</p>
+          <ul className="list-disc pl-8 space-y-2">
+            <li>Without the necessary rights and licenses.</li>
+            <li>
+              That infringes on the rights of any third party (including copyright, trademark, patent, rights of privacy
+              or publicity, or any other proprietary right).
+            </li>
+            <li>
+              Containing viruses or malicious code intended to disrupt the functioning of KANOONI KARWAYAHI or others'
+              systems.
+            </li>
+            <li>
+              That is grossly harmful, harassing, invasive of privacy, hateful, disparaging, related to money laundering
+              or otherwise unlawful.
+            </li>
+            <li>
+              That may be seen as threatening, abusive, defamatory, vulgar, obscene, or racially or ethnically
+              offensive.
+            </li>
+            <li>That encourages criminal conduct or violates applicable law.</li>
+            <li>That misleads the recipient about the origin of the content or is grossly offensive or menacing.</li>
+            <li>That belongs to another person and for which you lack appropriate rights.</li>
+            <li>That harms minors in any way.</li>
+            <li>
+              That threatens India's unity, integrity, defence, security, or sovereignty; harms friendly relations with
+              foreign states; or causes incitement to commit any cognizable offence or obstructs investigation of any
+              offence or insults another nation.
+            </li>
+          </ul>
+          <p className="mt-4 mb-4">
+            You further agree not to sublicense, assign, or transfer any license granted to you by KANOONI KARWAYAHI,
+            and acknowledge that any such attempt will be void.
+          </p>
+        </section>
+
+        <section>
+          <h2 className="text-xl font-bold mb-4">Protection of Intellectual Property and Data Integrity</h2>
+          <p className="mb-4">
+            The User shall not infringe upon the intellectual property rights of any person or entity, nor shall they
+            download or retain any information from any computer system with the intent to do so.
+          </p>
+        </section>
+
+        <section>
+          <h2 className="text-xl font-bold mb-4">Operational Integrity and Liability Disclaimer</h2>
+          <p className="mb-4">
+            KANOONI KARWAYAHI (hereinafter referred to as "the Platform") will make its best efforts to ensure
+            operational reliability. However, it does not warrant that its website or any of its affiliates or linked
+            systems are free from operational errors, viruses, computer contaminants, worms, or other harmful
+            components. User subscriptions are subject to usage quotas as applicable. Email addresses provided in
+            contact details must be genuine and accessible only by authorized personnel.
+          </p>
+        </section>
+
+        <section>
+          <h2 className="text-xl font-bold mb-4">Use of Official Email Domains</h2>
+          <p className="mb-4">
+            The Client must use only email addresses associated with an officially owned domain when registering
+            sub-users or conducting activities on their account, including sending emails or posting jobs. Use of
+            non-official domains is strictly prohibited, and violation may result in suspension or termination of
+            services.
+          </p>
+        </section>
+
+        <section>
+          <h2 className="text-xl font-bold mb-4">Data Disclosure and Transactions</h2>
+          <p className="mb-4">
+            KANOONI KARWAYAHI shall not be liable for any losses due to inadvertent or otherwise disclosure of user
+            information, including credit/debit card transactions. Users assume all risks associated with such
+            disclosures.
+          </p>
+        </section>
+
+        <section>
+          <h2 className="text-xl font-bold mb-4">Payments and Refunds</h2>
+          <p className="mb-4">
+            Payments for services are on a 100% advance basis. Refunds, if any, are at the sole discretion of KANOONI
+            KARWAYAHI and are not guaranteed in terms of timelines or amounts. Server uptime or performance is not
+            guaranteed and is on a best-effort basis, with liability limited to refund of the amount paid. Free services
+            are not covered by any liability. KANOONI KARWAYAHI reserves the right to modify or change disclaimers or
+            terms without prior notice. All relevant terms, whether mentioned or not, shall be deemed to apply.
+          </p>
+        </section>
+
+        <section>
+          <h2 className="text-xl font-bold mb-4">Third-Party Services</h2>
+          <p className="mb-4">
+            For online courses provided by third-party providers (e.g., Sunrise Mentors Private Limited), any disputes
+            post-subscription must be directed to the third party (contact@codingninjas.com) for resolution.
+          </p>
+        </section>
+
+        <section>
+          <h2 className="text-xl font-bold mb-4">Scope of Service</h2>
+          <p className="mb-4">
+            Unless specified otherwise, the Platform's sole obligation is to provide access to its online portal for the
+            duration of the subscription period. Any usage limits set forth do not constitute additional performance
+            obligations.
+          </p>
+        </section>
+
+        <section>
+          <h2 className="text-xl font-bold mb-4">Set-Off Rights</h2>
+          <p className="mb-4">
+            KANOONI KARWAYAHI retains the right to set off any amounts payable by a user against any outstanding amounts
+            owed by the user under any other agreements.
+          </p>
+        </section>
+
+        <section>
+          <h2 className="text-xl font-bold mb-4">Data Publication</h2>
+          <p className="mb-4">
+            KANOONI KARWAYAHI reserves the right to post user data on its site or affiliate sites as deemed appropriate,
+            at no additional cost.
+          </p>
+        </section>
+
+        <section>
+          <h2 className="text-xl font-bold mb-4">No Exclusivity or Non-Poaching</h2>
+          <p className="mb-4">
+            The agreement between the Platform and the user is not a non-poach agreement nor should it be construed as
+            such. KANOONI KARWAYAHI is a public site, and posted information enters the public domain unless
+            specifically designated as private.
+          </p>
+        </section>
+
+        <section>
+          <h2 className="text-xl font-bold mb-4">No Agency</h2>
+          <p className="mb-4">
+            KANOONI KARWAYAHI is not an agent for any subscriber or user, and has no agents except those expressly
+            listed on its homepage.
+          </p>
+        </section>
+
+        <section>
+          <h2 className="text-xl font-bold mb-4">Legal Proceedings and Responsibility</h2>
+          <p className="mb-4">
+            KANOONI KARWAYAHI will not be a party to disputes between users or between users and third parties. If named
+            in legal proceedings, costs will be recovered from the initiating party, though KANOONI KARWAYAHI will
+            comply with valid court orders. The Platform operates from Noida, India, and makes no warranties about the
+            appropriateness of its content in other locations. Users outside India are responsible for complying with
+            their local laws, including export/import regulations.
+          </p>
+        </section>
+
+        <section>
+          <h2 className="text-xl font-bold mb-4">Spam and Malicious Content</h2>
+          <p className="mb-4">
+            KANOONI KARWAYAHI is not liable for spam or malicious content received through external emails or links to
+            its site.
+          </p>
+        </section>
+
+        <section>
+          <h2 className="text-xl font-bold mb-4">Governing Law and Dispute Resolution</h2>
+          <p className="mb-4">
+            These Terms and Conditions are governed by the laws of the Republic of India. Any disputes shall be resolved
+            by arbitration in New Delhi, India, under the Arbitration & Conciliation Act, 1996 (as amended). The
+            decision of the arbitrator shall be final and binding. Exclusive jurisdiction for any other matters lies
+            with the courts in New Delhi, India.
+          </p>
+        </section>
+
+        <section>
+          <h2 className="text-xl font-bold mb-4">Indemnity</h2>
+          <p className="mb-4">
+            By accepting these Terms and Conditions, you agree to indemnify and hold harmless KANOONI KARWAYAHI, its
+            directors, officers, employees, agents, subsidiaries, affiliates, and other partners from any damages or
+            liabilities arising out of your use of the services, including but not limited to your submitted information
+            or any related matter.
+          </p>
+        </section>
+
+        <section>
+          <h2 className="text-xl font-bold mb-4">Goods and Services Tax (GST)</h2>
+          <p className="mb-4">
+            Any references to taxes herein shall include GST from the date of its implementation in India. Any
+            additional tax liability due to GST or changes in tax rates will be recovered from the subscriber/user in
+            addition to the agreed fees.
+          </p>
+        </section>
+
+        <section>
+          <h2 className="text-xl font-bold mb-4">Privacy Policy and Compliance</h2>
+          <p className="mb-4">
+            The usage of KANOONI KARWAYAHI is also subject to the Privacy Policy available through the site's designated
+            link. Non-compliance with these Terms or the Privacy Policy may result in termination of usage rights and
+            removal of any offending information.
+          </p>
+        </section>
+      </div>
+
+      <div className="mt-12 text-center text-sm text-gray-500">
+        © {new Date().getFullYear()} KANOONI KARWAYAHI. All rights reserved.
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default TermsOfService;
+export default TermsOfService

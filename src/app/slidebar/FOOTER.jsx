@@ -53,7 +53,7 @@ const Footer = () => {
             <p className="mb-3">
               Your trusted partner in legal solutions. Connecting you with top-tier lawyers for all your legal needs.
             </p>
-            <p>&copy; {new Date().getFullYear()} ProperAid. All Rights Reserved.</p>
+            <p>&copy; {new Date().getFullYear()} Kanoonikarwayahi. All Rights Reserved.</p>
           </motion.div>
 
           <motion.div className="text-center md:text-left" variants={itemVariants}>
@@ -101,13 +101,13 @@ const Footer = () => {
             <h4 className="text-lg font-semibold text-white mb-2">Contact Us</h4>
             <div className="space-y-2">
               <p className="flex items-center justify-center md:justify-start">
-                <Mail size={18} className="mr-2" /> Kanoonikarwayahi45@.com
+                <Mail size={18} className="mr-2" /> kanoonikarwayahi@gmail.com
               </p>
               <p className="flex items-center justify-center md:justify-start">
                 <MapPin size={18} className="mr-2" /> Headquarter in Prayagraj
               </p>
             </div>
-            <div className="flex justify-center md:justify-start space-x-4 mt-4">
+            {/* <div className="flex justify-center md:justify-start space-x-4 mt-4">
               {[
                 { href: "#", icon: <Facebook size={18} />, label: "Facebook" },
                 { href: "#", icon: <Twitter size={18} />, label: "Twitter" },
@@ -127,7 +127,7 @@ const Footer = () => {
                   {social.icon}
                 </SocialIcon>
               ))}
-            </div>
+            </div> */}
           </motion.div>
         </div>
         <motion.div

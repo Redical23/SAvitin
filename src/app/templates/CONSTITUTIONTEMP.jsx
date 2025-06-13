@@ -13,7 +13,7 @@ const CONSTITUTIONTEMP = ({ constitution }) => {
               key={constitutionItem?._id || index}
               className="card perspective-1000 cursor-pointer"
               
-              onClick={() => router.push(`/constitutionid/${constitutionItem?._id}`)}
+              onClick={() => router.push(`/pruser/constitutionid/${constitutionItem?._id}`)}
             >
               <div className="card-inner relative w-full h-full transition-all duration-700 transform-style-preserve-3d group">
                 {/* Front Side - Case Details */}
