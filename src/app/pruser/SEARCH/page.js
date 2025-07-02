@@ -71,14 +71,18 @@ export default function SearchPage() {
       // Filter constitution
       const matchedConstitution = constitution.filter(
         (item) =>
-          item.applicationNo?.toLowerCase().includes(searchterm.toLowerCase()) ||
-          item.applicant?.toLowerCase().includes(searchterm.toLowerCase()) ||
-          item.courtNo?.toLowerCase().includes(searchterm.toLowerCase()) ||
-          item.oppositeParty?.toLowerCase().includes(searchterm.toLowerCase()) ||
-          item.counselForApplicant?.toLowerCase().includes(searchterm.toLowerCase()) ||
-          item.counselForOppositeParty?.some((party) => party?.toLowerCase().includes(searchterm.toLowerCase())) ||
-          item.Delivereddate?.toLowerCase().includes(searchterm.toLowerCase()) ||
-          item["Equivalent citations"]?.some((citation) => citation?.toLowerCase().includes(searchterm.toLowerCase())),
+         item.name?.toLowerCase().includes(searchterm.toLowerCase()) ||
+item.bench?.toLowerCase().includes(searchterm.toLowerCase()) ||
+item.alsoKnownAs?.toLowerCase().includes(searchterm.toLowerCase()) ||
+item.keyIssue?.toLowerCase().includes(searchterm.toLowerCase()) ||
+item.judgment?.some(j => j?.toLowerCase().includes(searchterm.toLowerCase())) ||
+item.Importance?.some(i => i?.toLowerCase().includes(searchterm.toLowerCase())) ||
+item["Equivalent citations"]?.toLowerCase().includes(searchterm.toLowerCase()) ||
+item.filedate?.toLowerCase().includes(searchterm.toLowerCase()) ||
+item.courtNo?.toLowerCase().includes(searchterm.toLowerCase()) ||
+item.inWhichCourt?.toLowerCase().includes(searchterm.toLowerCase()) ||
+item.caseType?.toLowerCase().includes(searchterm.toLowerCase())
+
       )
       setFilteredConstitution(matchedConstitution)
 
@@ -217,74 +221,115 @@ export default function SearchPage() {
                         </div>
 
                         {/* Main Content */}
-                        <div className="p-5 space-y-4">
-                          {/* Case Information */}
-                          <div className="space-y-3">
-                            <div className="flex items-center space-x-2">
-                              <div className="w-24 text-blue-300 text-sm">Court No:</div>
-                              <div className="text-white font-medium">{item?.courtNo || "N/A"}</div>
-                            </div>
+                      {/* Main Content */}
+<div className="p-5 space-y-4">
+  {/* Case Information */}
+  <div className="space-y-3">
+    {item?.courtNo && item.courtNo !== "N/A" && (
+      <div className="flex items-center space-x-2">
+        <div className="w-32 text-blue-300 text-sm">Court No:</div>
+        <div className="text-white font-medium">{item.courtNo}</div>
+      </div>
+    )}
 
-                            <div className="flex items-center space-x-2">
-                              <div className="w-24 text-blue-300 text-sm">Application:</div>
-                              <div className="text-white font-medium">{item?.applicationNo || "N/A"}</div>
-                            </div>
+    {item?.filedate && item.filedate !== "N/A" && (
+      <div className="flex items-center space-x-2">
+        <div className="w-32 text-blue-300 text-sm">Filed Date:</div>
+        <div className="text-white font-medium">{item.filedate}</div>
+      </div>
+    )}
 
-                            <div className="flex items-center space-x-2">
-                              <div className="w-24 text-blue-300 text-sm">Delivered:</div>
-                              <div className="text-white font-medium">{item?.Delivereddate || "N/A"}</div>
-                            </div>
-                          </div>
+    {item?.inWhichCourt && item.inWhichCourt !== "N/A" && (
+      <div className="flex items-center space-x-2">
+        <div className="w-32 text-blue-300 text-sm">In Court:</div>
+        <div className="text-white font-medium">{item.inWhichCourt}</div>
+      </div>
+    )}
 
-                          {/* Citations */}
-                          <div className="pt-2 border-t border-blue-800/50">
-                            <h4 className="text-sm font-semibold text-blue-300 mb-1">Equivalent Citations</h4>
-                            <p className="text-white text-sm">
-                              {Array.isArray(item?.["Equivalent citations"])
-                                ? item["Equivalent citations"].join(", ")
-                                : item?.["Equivalent citations"] || "N/A"}
-                            </p>
-                          </div>
-                        </div>
+    {item?.caseType && item.caseType !== "N/A" && (
+      <div className="flex items-center space-x-2">
+        <div className="w-32 text-blue-300 text-sm">Case Type:</div>
+        <div className="text-white font-medium">{item.caseType}</div>
+      </div>
+    )}
+  </div>
 
-                        {/* Hover Panel - Parties Information */}
-                        <div className="absolute inset-0 bg-gradient-to-br from-indigo-900/95 to-blue-900/95 p-5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-center">
-                          <h3 className="text-xl font-bold text-white mb-4">Parties Involved</h3>
+  {/* Citations */}
+  {item?.["Equivalent citations"] && item["Equivalent citations"] !== "N/A" && (
+    <div className="pt-2 border-t border-blue-800/50">
+      <h4 className="text-sm font-semibold text-blue-300 mb-1">Equivalent Citations</h4>
+      <p className="text-white text-sm">
+        {Array.isArray(item["Equivalent citations"])
+          ? item["Equivalent citations"].join(", ")
+          : item["Equivalent citations"]}
+      </p>
+    </div>
+  )}
 
-                          <div className="space-y-3 overflow-y-auto max-h-[calc(100%-2rem)]">
-                            <div>
-                              <h4 className="text-sm font-semibold text-blue-300">Applicant</h4>
-                              <p className="text-white text-sm">{item?.applicant || "N/A"}</p>
-                            </div>
+  {/* Judgment */}
+  {Array.isArray(item?.judgment) && item.judgment.length > 0 && (
+    <div className="pt-2 border-t border-blue-800/50">
+      <h4 className="text-sm font-semibold text-blue-300 mb-1">Judgment</h4>
+      <ul className="list-disc list-inside text-white text-sm">
+        {item.judgment.map((j, idx) => (
+          <li key={idx}>{j}</li>
+        ))}
+      </ul>
+    </div>
+  )}
 
-                            <div>
-                              <h4 className="text-sm font-semibold text-blue-300">Counsel for Applicant</h4>
-                              <p className="text-white text-sm">{item?.counselForApplicant || "N/A"}</p>
-                            </div>
+  {/* Importance */}
+  {Array.isArray(item?.Importance) && item.Importance.length > 0 && (
+    <div className="pt-2 border-t border-blue-800/50">
+      <h4 className="text-sm font-semibold text-blue-300 mb-1">Importance</h4>
+      <ul className="list-disc list-inside text-white text-sm">
+        {item.Importance.map((imp, idx) => (
+          <li key={idx}>{imp}</li>
+        ))}
+      </ul>
+    </div>
+  )}
+</div>
 
-                            <div>
-                              <h4 className="text-sm font-semibold text-blue-300">Opposition Party</h4>
-                              <p className="text-white text-sm">{item?.oppositeParty || "N/A"}</p>
-                            </div>
+{/* Hover Panel - Basic Case Info */}
+<div className="absolute inset-0 bg-gradient-to-br from-indigo-900/95 to-blue-900/95 p-5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-center">
+  <h3 className="text-xl font-bold text-white mb-4">Case Details</h3>
 
-                            <div>
-                              <h4 className="text-sm font-semibold text-blue-300">Counsel for Opposite Party</h4>
-                              {Array.isArray(item?.counselForOppositeParty) ? (
-                                <ul className="space-y-1 text-white text-sm">
-                                  {item.counselForOppositeParty.map((party, index) => (
-                                    <li key={index}>{party}</li>
-                                  ))}
-                                </ul>
-                              ) : (
-                                <p className="text-white text-sm">{item?.counselForOppositeParty || "N/A"}</p>
-                              )}
-                            </div>
-                          </div>
+  <div className="space-y-3 overflow-y-auto max-h-[calc(100%-2rem)]">
+    {item?.name && item.name !== "N/A" && (
+      <div>
+        <h4 className="text-sm font-semibold text-blue-300">Case Name</h4>
+        <p className="text-white text-sm">{item.name}</p>
+      </div>
+    )}
 
-                          <div className="absolute bottom-3 right-3">
-                            <span className="text-xs text-blue-300 italic">Click for details</span>
-                          </div>
-                        </div>
+    {item?.bench && item.bench !== "N/A" && (
+      <div>
+        <h4 className="text-sm font-semibold text-blue-300">Bench</h4>
+        <p className="text-white text-sm">{item.bench}</p>
+      </div>
+    )}
+
+    {item?.alsoKnownAs && item.alsoKnownAs !== "N/A" && (
+      <div>
+        <h4 className="text-sm font-semibold text-blue-300">Also Known As</h4>
+        <p className="text-white text-sm">{item.alsoKnownAs}</p>
+      </div>
+    )}
+
+    {item?.keyIssue && item.keyIssue !== "N/A" && (
+      <div>
+        <h4 className="text-sm font-semibold text-blue-300">Key Issue</h4>
+        <p className="text-white text-sm">{item.keyIssue}</p>
+      </div>
+    )}
+  </div>
+
+  <div className="absolute bottom-3 right-3">
+    <span className="text-xs text-blue-300 italic">Click for details</span>
+  </div>
+</div>
+
                       </motion.div>
                     </Link>
                   ))}

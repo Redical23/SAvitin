@@ -1,7 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ["media.istockphoto.com"], // ✅ Add your external image host here
+    domains: ["media.istockphoto.com",
+        "www.hindustantimes.com",
+    ], // ✅ Add your external image host here
   },
   i18n: {
     locales: ['en', 'hi', 'ur'],

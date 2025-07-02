@@ -6,7 +6,7 @@ export async function GET(req) {
 
   try {
     // Querying the News collection to find an article with the 'featured' field set to true
-    const featuredNews = await News.findOne({ Feature: true });
+    const featuredNews = await News.findOne({ feature: true });
 
     // Log the result to confirm if the data is found
     console.log('Featured News:', featuredNews);

@@ -1,3 +1,4 @@
+
 "use client"
 
 import { useState, useEffect } from "react"
@@ -169,6 +170,7 @@ export default function LawyerProfilePage({ params }) {
     content = "No content available",
     readTime = "N/A",
     role = "Unknown role",
+    feature = false,
   } = newsData
 
   return (
@@ -288,16 +290,30 @@ export default function LawyerProfilePage({ params }) {
                   )}
                 </div>
                 {isEditing && (
-                  <div className="flex items-center gap-2 text-gray-400">
-                    <span>Category:</span>
-                    <input
-                      type="text"
-                      value={editData.category || ""}
-                      onChange={(e) => handleInputChange("category", e.target.value)}
-                      className="bg-gray-800 text-white px-2 py-1 rounded border border-gray-600"
-                      placeholder="Category"
-                    />
-                  </div>
+                  <>
+                    <div className="flex items-center gap-2 text-gray-400">
+                      <span>Category:</span>
+                      <input
+                        type="text"
+                        value={editData.category || ""}
+                        onChange={(e) => handleInputChange("category", e.target.value)}
+                        className="bg-gray-800 text-white px-2 py-1 rounded border border-gray-600"
+                        placeholder="Category"
+                      />
+                    </div>
+                    <div className="flex items-center gap-2 text-gray-400">
+                      <span>Featured:</span>
+                      <label className="relative inline-flex items-center cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={editData.feature || false}
+                          onChange={(e) => handleInputChange("feature", e.target.checked)}
+                          className="sr-only peer"
+                        />
+                        <div className="w-11 h-6 bg-gray-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                      </label>
+                    </div>
+                  </>
                 )}
               </div>
 
@@ -361,6 +377,9 @@ export default function LawyerProfilePage({ params }) {
                 <div className="flex items-center gap-4">
                   <div>
                     <div className="text-sm text-gray-400">{date}</div>
+                    {!isEditing && feature && (
+                      <div className="text-xs text-blue-400 font-semibold">FEATURED</div>
+                    )}
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
@@ -368,19 +387,27 @@ export default function LawyerProfilePage({ params }) {
                 </div>
               </div>
 
-              <div className="prose prose-invert max-w-none">
-                {isEditing ? (
-                  <textarea
-                    value={editData.content || ""}
-                    onChange={(e) => handleInputChange("content", e.target.value)}
-                    className="w-full bg-gray-800 text-white px-3 py-2 rounded border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    rows="15"
-                    placeholder="Content (HTML supported)"
-                  />
-                ) : (
-                  <div dangerouslySetInnerHTML={{ __html: content }} />
-                )}
-              </div>
+             <div className="prose prose-invert max-w-none">
+  {isEditing ? (
+    <textarea
+      value={editData.content || ""}
+      onChange={(e) => handleInputChange("content", e.target.value)}
+      className="w-full bg-gray-800 text-white px-3 py-2 rounded border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+      rows="15"
+      placeholder="Content (HTML supported)"
+    />
+  ) : (
+    content
+      .split('\n')
+      .filter(p => p.trim() !== '')
+      .map((paragraph, index) => (
+        <p key={index} className="mb-4 leading-relaxed text-gray-300 text-lg">
+          {paragraph.trim()}
+        </p>
+      ))
+  )}
+</div>
+
 
               {!isEditing && (
                 <div className="mt-12">

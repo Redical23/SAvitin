@@ -5,8 +5,8 @@ export async function GET(req) {
   await dbConnect();
 
   try {
-    const news = await  constitution.find({});
-    
+    const news = await constitution.find({});
+
     return new Response(JSON.stringify(news), {
       status: 200,
       headers: { 'Content-Type': 'application/json' },
@@ -34,6 +34,13 @@ export async function POST(req) {
         headers: { "Content-Type": "application/json" },
       })
     }
+    if (!body.caseType || body.caseType.trim() === "") {
+      return new Response(JSON.stringify({ error: "Case type is required" }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      })
+    }
+
 
     // Try multiple times with different applicationNo values if there are duplicates
     let attempts = 0
@@ -60,10 +67,10 @@ export async function POST(req) {
           importance: Array.isArray(body.importance)
             ? body.importance.filter((item) => item && item.trim() !== "")
             : [],
-          // Add any other fields that might be required by your schema
           fileddate: new Date().toISOString().split("T")[0], // Add current date as default
           courtNo: "N/A", // Add default values for any other required fields
           inWhichCourt: "Supreme Court", // Default court
+          caseType: body.caseType || "", // <-- Added caseType here
         }
 
         console.log(`Attempt ${attempts + 1} - Processed constitution data:`, constitutionData)
@@ -76,7 +83,6 @@ export async function POST(req) {
         if (createError.code === 11000 && attempts < maxAttempts - 1) {
           console.log(`Duplicate key error on attempt ${attempts + 1}, retrying...`)
           attempts++
-          // Wait a small amount before retrying
           await new Promise((resolve) => setTimeout(resolve, 100))
         } else {
           throw createError
@@ -100,6 +106,7 @@ export async function POST(req) {
     })
   }
 }
+
 
 export async function DELETE(req) {
   await dbConnect()

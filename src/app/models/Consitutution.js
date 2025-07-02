@@ -12,7 +12,7 @@ const constitutionsSchema = new mongoose.Schema({
   },
   bench: {
     type: String,
-    required: true,
+   
   },
   alsoKnownAs: {
     type: String,
@@ -25,7 +25,7 @@ const constitutionsSchema = new mongoose.Schema({
     type: [String],
     required: true,
   },
-  Importance: {
+  importance: {
     type: [String],
     required: true,
   },
@@ -43,7 +43,11 @@ const constitutionsSchema = new mongoose.Schema({
   },
   inWhichCourt: {
     type: String,
-    default: "Supreme Court",
+    default: "N/A",
+  },
+   caseType: {
+    type: String,
+    required: true, // <-- ✅ Add this line
   },
 });
 

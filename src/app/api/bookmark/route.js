@@ -66,12 +66,25 @@ export async function GET(req) {
 
   try {
     const { searchParams } = new URL(req.url);
+    const email = searchParams.get("email");
+    const newsId = searchParams.get("newsId");
     const ids = searchParams.get("ids")?.split(",") || [];
 
+    // ✅ Check if a specific article is bookmarked by the user
+    if (email && newsId) {
+      const user = await User.findOne({ email });
+      const isBookmarked = user?.bookmarks?.includes(newsId) || false;
+
+      return new Response(JSON.stringify({ isBookmarked }), {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
+    // 🔄 Existing fallback for bulk news fetch
     let news;
     if (ids.length > 0) {
-      console.log("📢 Fetching news for IDs:", ids);
-      news = await News.find({ _id: { $in: ids } }); // Fetch only matching IDs
+      news = await News.find({ _id: { $in: ids } });
     } else {
       news = await News.find({});
     }
@@ -81,11 +94,48 @@ export async function GET(req) {
       headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
-    console.error("❌ Error fetching news:", error);
-    return new Response(JSON.stringify({ error: "Failed to fetch news" }), {
+    console.error("❌ Error in GET /api/bookmark:", error);
+    return new Response(JSON.stringify({ error: "Failed to fetch data" }), {
       status: 500,
       headers: { "Content-Type": "application/json" },
     });
   }
 }
 
+
+export async function DELETE(req) {
+  await dbConnect();
+
+  try {
+    const { email, newsId } = await req.json();
+
+    if (!email || !newsId) {
+      return new Response(
+        JSON.stringify({ error: "Missing email or newsId." }),
+        { status: 400, headers: { "Content-Type": "application/json" } }
+      );
+    }
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      return new Response(
+        JSON.stringify({ error: "User not found." }),
+        { status: 404, headers: { "Content-Type": "application/json" } }
+      );
+    }
+
+    user.bookmarks = user.bookmarks.filter(id => id !== newsId);
+    await user.save();
+
+    return new Response(
+      JSON.stringify({ message: "Bookmark removed." }),
+      { status: 200, headers: { "Content-Type": "application/json" } }
+    );
+  } catch (error) {
+    console.error("Error removing bookmark:", error);
+    return new Response(
+      JSON.stringify({ error: "Failed to remove bookmark." }),
+      { status: 500, headers: { "Content-Type": "application/json" } }
+    );
+  }
+}

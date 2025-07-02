@@ -1,3 +1,4 @@
+
 "use client"
 
 import { useState } from "react"
@@ -16,12 +17,13 @@ export default function AdminPage() {
   })
   const [newsResponseMessage, setNewsResponseMessage] = useState("")
 
-  // State for Constitution Data form - Updated to match new structure
+  // State for Constitution Data form - Updated to include caseType
   const [constitutionFormData, setConstitutionFormData] = useState({
     name: "",
     alsoKnownAs: "",
     bench: "",
     keyIssue: "",
+    caseType: "",
     "Equivalent citations": "",
     judgment: [""],
     importance: [""],
@@ -139,6 +141,7 @@ export default function AdminPage() {
         alsoKnownAs: "",
         bench: "",
         keyIssue: "",
+        caseType: "",
         "Equivalent citations": "",
         judgment: [""],
         importance: [""],
@@ -273,7 +276,7 @@ export default function AdminPage() {
             {newsResponseMessage && <p className="mt-4 text-center text-sm text-gray-600">{newsResponseMessage}</p>}
           </div>
 
-          {/* Constitution Data Form - Updated */}
+          {/* Constitution Data Form - Updated with caseType */}
           <div className="bg-white p-6 rounded-lg shadow-lg">
             <h2 className="text-2xl font-bold mb-4">Create Constitution Case</h2>
             <form onSubmit={handleConstitutionSubmit} className="space-y-4">
@@ -302,6 +305,34 @@ export default function AdminPage() {
                   placeholder="e.g., Mandal Commission Case"
                   className="w-full p-2 border border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500"
                 />
+              </div>
+
+              {/* Case Type */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Case Type</label>
+                <select
+                  name="caseType"
+                  value={constitutionFormData.caseType}
+                  onChange={handleConstitutionChange}
+                  className="w-full p-2 border border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500"
+                >
+                  <option value="">Select Case Type</option>
+                  
+                  <option value="Civil Rights">Civil Rights</option>
+                  <option value="Criminal Law">Criminal Law</option>
+                  
+                  <option value="Fundamental Rights">Fundamental Rights</option>
+                  <option value="Directive Principles">Directive Principles</option>
+                  <option value="Reservation">Reservation</option>
+                  <option value="Constitutional Amendment">Constitutional Amendment</option>
+                  <option value="Separation of Powers">Separation of Powers</option>
+                  <option value="Federalism">Federalism</option>
+                  <option value="Religious Freedom">Religious Freedom</option>
+                  <option value="Right to Privacy">Right to Privacy</option>
+                  <option value="Environmental Law">Environmental Law</option>
+                  <option value="Electoral Law">Electoral Law</option>
+                  <option value="Other">Other</option>
+                </select>
               </div>
 
               {/* Bench Composition */}

@@ -1,3 +1,4 @@
+
 "use client"
 
 import { useState, useEffect } from "react"
@@ -8,6 +9,7 @@ import SIGNOUT from "../../signinout/SIGNOUT"
 import { useModelContext } from "../../context/Context"
 import LAHEAD from "../../slidebar/LAHEAD"
 import Footer from "../../slidebar/FOOTER"
+
 const defaultSettingsOptions = [
   { name: "Edit Profile", href: "/pruser/editprofile" },
   { name: "Bookmarks", href: "/pruser/bookmark" },
@@ -42,8 +44,11 @@ export default function SettingsPage() {
     }
   }, [email])
 
-  // Build settings options; add Admin Panel if isAdmin is true.
-  const settingsOptions = [...defaultSettingsOptions]
+  // Build settings options; filter out subscription if user is already subscribed
+  const settingsOptions = [...defaultSettingsOptions.filter(option => 
+    option.name !== "Subscription" || !isSubscribed
+  )]
+  
   if (isAdmin) {
     settingsOptions.push({ name: "Admin Panel", href: "/admin" })
   }
@@ -101,6 +106,7 @@ export default function SettingsPage() {
             const updateData = await updateRes.json()
             if (!updateRes.ok) throw new Error(updateData.error || "Failed to update subscription")
             alert("Subscription activated successfully!")
+            setIsSubscribed(true) // Update local state to hide the button
           } catch (error) {
             console.error("Subscription update failed:", error)
             alert("Payment succeeded, but subscription update failed.")
@@ -168,21 +174,15 @@ export default function SettingsPage() {
               transition={{ delay: index * 0.1 }}
             >
               {option.name === "Subscription" ? (
-                isSubscribed ? (
-                  <motion.div className="block w-full p-4 rounded-lg bg-green-600 shadow-md text-center text-lg font-medium text-white">
-                    Subscription Active
-                  </motion.div>
-                ) : (
-                  <motion.button
-                    whileHover={{ scale: 1.03 }}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={() => handleSubscribe("basic")}
-                    className="block w-full p-4 rounded-lg bg-blue-600 shadow-md text-center text-lg font-medium transition-colors text-white hover:bg-blue-700"
-                    disabled={loading}
-                  >
-                    {loading ? "Processing..." : option.name}
-                  </motion.button>
-                )
+                <motion.button
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => handleSubscribe("basic")}
+                  className="block w-full p-4 rounded-lg bg-blue-600 shadow-md text-center text-lg font-medium transition-colors text-white hover:bg-blue-700"
+                  disabled={loading}
+                >
+                  {loading ? "Processing..." : option.name}
+                </motion.button>
               ) : (
                 <MotionLink
                   href={option.href}

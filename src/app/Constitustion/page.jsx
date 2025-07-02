@@ -31,22 +31,10 @@ const Page = () => {
   };
 
   const caseTypes = [
-    'Family Court',
-    'Corporate Case',
-    'Property Disputes',
-    'Consumer Cases',
-    'Taxation Cases',
-    'Intellectual Property Cases',
-    'Employment & Labor Cases',
-    'Environmental Cases',
-    'Contract Disputes',
-    'Criminal Offenses',
-    'Economic Offenses',
-    'Cybercrime Cases',
-    'Corruption Cases',
-    'Narcotics & Drugs Cases',
-    'Traffic Violations & Motor Accident Cases',
-    'Dowry & Domestic Violence Cases'
+   
+    'Civil Rights',
+    'Criminal Law',
+    ,
   ];
 
   const usersPerPage = 9;

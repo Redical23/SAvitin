@@ -1,3 +1,4 @@
+
 "use client"
 
 import { useEffect, useState } from "react"
@@ -335,7 +336,7 @@ export default function ConstitutionDetailClient({ userData }) {
               )}
 
               {/* Importance Section */}
-              {userData.Importance && Array.isArray(userData. Importance) && (
+              {userData.importance && Array.isArray(userData.importance) && (
                   <section className="space-y-4">
                     <div className="flex justify-between items-center">
                       <h2 className="text-xl font-semibold text-slate-800 border-b pb-2">Legal Importance</h2>
@@ -349,7 +350,7 @@ export default function ConstitutionDetailClient({ userData }) {
                       )}
                     </div>
                     <div className="space-y-3">
-                      {(isEditing ? editData.Importance || [] : userData. Importance).map((item, index) => (
+                      {(isEditing ? editData.importance || [] : userData.importance).map((item, index) => (
                           <div key={index} className="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500 relative">
                             {isEditing && (
                               <button
@@ -400,11 +401,11 @@ export default function ConstitutionDetailClient({ userData }) {
                                 </p>
                               </div>
                             ))}
-                          {citation.Importance && (
+                          {citation.importance && (
                             <div className="ml-4">
                               <p className="font-semibold">Importance:</p>
                               <ul className="list-disc list-inside ml-2">
-                                {citation.Importance.map((imp, iIndex) => (
+                                {citation.importance.map((imp, iIndex) => (
                                   <li key={iIndex} className="text-slate-600">
                                     {imp}
                                   </li>
