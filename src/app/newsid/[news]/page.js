@@ -1,114 +1,109 @@
+"use client";
 
-"use client"
-
-import { useState, useEffect } from "react"
-import { ArrowLeft, Clock, Calendar, Edit, Trash2 } from "lucide-react"
-import Image from "next/image"
-import { useRouter } from "next/navigation"
-import Link from "next/link"
-import { RelatedArticle } from "../../slidebar/RelatedArticleProps"
-import ShareBookmarkButtons from "../../slidebar/ShareBookmarkButtons"
-import Footer from "../../slidebar/FOOTER"
-import { useModelContext } from "../../context/Context" // Assuming you store the email there
+import { useState, useEffect } from "react";
+import { ArrowLeft, Clock, Calendar, Edit, Trash2 } from "lucide-react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { RelatedArticle } from "../../slidebar/RelatedArticleProps";
+import ShareBookmarkButtons from "../../slidebar/ShareBookmarkButtons";
+import Footer from "../../slidebar/FOOTER";
+import { useModelContext } from "../../context/Context";
 
 export default function LawyerProfilePage({ params }) {
-  const router = useRouter()
-  const { email } = useModelContext() // get email from context
-  const [isAdmin, setIsAdmin] = useState(false)
-  const [newsId, setNewsId] = useState(null)
-  const [newsData, setNewsData] = useState(null)
-  const [relatedArticles, setRelatedArticles] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [isEditing, setIsEditing] = useState(false)
-  const [editData, setEditData] = useState(null)
-  const [isSaving, setIsSaving] = useState(false)
+  const router = useRouter();
+  const { email } = useModelContext();
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [newsId, setNewsId] = useState(null);
+  const [newsData, setNewsData] = useState(null);
+  const [relatedArticles, setRelatedArticles] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editData, setEditData] = useState(null);
+  const [isSaving, setIsSaving] = useState(false);
 
-  // Check admin status
   useEffect(() => {
     if (email) {
       fetch(`/api/users?email=${email}`)
         .then((res) => res.json())
         .then((data) => {
-          console.log("User data:", data)
-          setIsAdmin(data.admin)
+          console.log("User data:", data);
+          setIsAdmin(data.admin);
         })
-        .catch((err) => console.error(err))
+        .catch((err) => console.error(err));
     }
-  }, [email])
+  }, [email]);
 
-  // Unwrap the params safely in useEffect
   useEffect(() => {
     async function unwrapParams() {
-      const resolvedParams = await params
+      const resolvedParams = await params;
       if (resolvedParams?.news) {
-        setNewsId(resolvedParams.news)
+        setNewsId(resolvedParams.news);
       } else {
-        // If no news param, redirect to News page
-        router.replace("/News")
+        router.replace("/News");
       }
     }
-    unwrapParams()
-  }, [params, router])
+    unwrapParams();
+  }, [params, router]);
 
-  // Fetch the news data
   useEffect(() => {
-    if (!newsId) return
+    if (!newsId) return;
 
     async function fetchData() {
-      setLoading(true)
+      setLoading(true);
       try {
-        const response = await fetch(`/api/news?id=${newsId}`)
-        const userData = await response.json()
-        setNewsData(userData)
-        setEditData(userData) // Initialize edit data with current data
+        const response = await fetch(`/api/news?id=${newsId}`);
+        const userData = await response.json();
+        setNewsData(userData);
+        setEditData(userData);
 
         if (userData?.category) {
-          const relatedResponse = await fetch(`/api/news?category=${userData.category}&excludeId=${newsId}`)
-          const relatedData = await relatedResponse.json()
-          setRelatedArticles(relatedData)
+          const relatedResponse = await fetch(`/api/news?category=${userData.category}&excludeId=${newsId}`);
+          const relatedData = await relatedResponse.json();
+          setRelatedArticles(relatedData);
         }
       } catch (error) {
-        console.error("Error fetching data:", error)
+        console.error("Error fetching data:", error);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
     }
 
-    fetchData()
-  }, [newsId])
+    fetchData();
+  }, [newsId]);
 
   const handleDelete = async () => {
     if (!confirm("Are you sure you want to delete this news article? This action cannot be undone.")) {
-      return
+      return;
     }
 
-    setIsSaving(true)
+    setIsSaving(true);
     try {
       const response = await fetch(`/api/news?id=${newsId}`, {
         method: "DELETE",
-      })
+      });
 
       if (response.ok) {
-        alert("News article deleted successfully!")
-        router.push("/News") // Redirect to News page
+        alert("News article deleted successfully!");
+        router.push("/News");
       } else {
-        const error = await response.json()
-        alert(`Failed to delete news article: ${error.error}`)
+        const error = await response.json();
+        alert(`Failed to delete news article: ${error.error}`);
       }
     } catch (error) {
-      console.error("Delete error:", error)
-      alert("An error occurred while deleting the news article.")
+      console.error("Delete error:", error);
+      alert("An error occurred while deleting the news article.");
     } finally {
-      setIsSaving(false)
+      setIsSaving(false);
     }
-  }
+  };
 
   const handleEdit = () => {
-    setIsEditing(true)
-  }
+    setIsEditing(true);
+  };
 
   const handleSave = async () => {
-    setIsSaving(true)
+    setIsSaving(true);
     try {
       const response = await fetch(`/api/news?id=${newsId}`, {
         method: "PUT",
@@ -116,39 +111,39 @@ export default function LawyerProfilePage({ params }) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(editData),
-      })
+      });
 
       if (response.ok) {
-        const updatedData = await response.json()
-        setNewsData(updatedData)
-        setIsEditing(false)
-        alert("News article updated successfully!")
+        const updatedData = await response.json();
+        setNewsData(updatedData);
+        setIsEditing(false);
+        alert("News article updated successfully!");
       } else {
-        const error = await response.json()
-        alert(`Failed to update news article: ${error.error}`)
+        const error = await response.json();
+        alert(`Failed to update news article: ${error.error}`);
       }
     } catch (error) {
-      console.error("Update error:", error)
-      alert("An error occurred while updating the news article.")
+      console.error("Update error:", error);
+      alert("An error occurred while updating the news article.");
     } finally {
-      setIsSaving(false)
+      setIsSaving(false);
     }
-  }
+  };
 
   const handleCancel = () => {
-    setEditData(newsData)
-    setIsEditing(false)
-  }
+    setEditData(newsData);
+    setIsEditing(false);
+  };
 
   const handleInputChange = (field, value) => {
     setEditData((prev) => ({
       ...prev,
       [field]: value,
-    }))
-  }
+    }));
+  };
 
   if (loading) {
-    return <div className="min-h-screen bg-[#020B2C] text-white p-6">Loading...</div>
+    return <div className="min-h-screen bg-[#020B2C] text-white p-6">Loading...</div>;
   }
 
   if (!newsData) {
@@ -157,7 +152,7 @@ export default function LawyerProfilePage({ params }) {
         <h1>User not found</h1>
         <p>The profile you're looking for does not exist.</p>
       </div>
-    )
+    );
   }
 
   const {
@@ -171,7 +166,7 @@ export default function LawyerProfilePage({ params }) {
     readTime = "N/A",
     role = "Unknown role",
     feature = false,
-  } = newsData
+  } = newsData;
 
   return (
     <div>
@@ -186,7 +181,6 @@ export default function LawyerProfilePage({ params }) {
               Back to News
             </Link>
 
-            {/* Admin Action Buttons */}
             {isAdmin && (
               <div className="flex space-x-3">
                 {isEditing ? (
@@ -246,6 +240,7 @@ export default function LawyerProfilePage({ params }) {
                         src={editData.image || "/placeholder.svg"}
                         alt="Preview"
                         fill
+                        unoptimized
                         className="object-cover rounded-lg"
                       />
                     </div>
@@ -253,7 +248,14 @@ export default function LawyerProfilePage({ params }) {
                 </div>
               ) : (
                 <>
-                  <Image src={image || "/placeholder.svg"} alt={headline} fill className="object-cover" priority />
+                  <Image
+                    src={image || "/placeholder.svg"}
+                    alt={headline}
+                    fill
+                    unoptimized
+                    className="object-cover"
+                    priority
+                  />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#020B2C] to-transparent" />
                 </>
               )}
@@ -346,6 +348,7 @@ export default function LawyerProfilePage({ params }) {
                         src={editData.image2 || "/placeholder.svg"}
                         alt="Preview"
                         fill
+                        unoptimized
                         className="object-cover rounded-lg"
                       />
                     </div>
@@ -354,7 +357,13 @@ export default function LawyerProfilePage({ params }) {
               ) : (
                 image2 && (
                   <div className="relative h-[300px] mb-6 rounded-lg overflow-hidden">
-                    <Image src={image2 || "/placeholder.svg"} alt="Article detail" fill className="object-cover" />
+                    <Image
+                      src={image2 || "/placeholder.svg"}
+                      alt="Article detail"
+                      fill
+                      unoptimized
+                      className="object-cover"
+                    />
                   </div>
                 )
               )}
@@ -387,27 +396,26 @@ export default function LawyerProfilePage({ params }) {
                 </div>
               </div>
 
-             <div className="prose prose-invert max-w-none">
-  {isEditing ? (
-    <textarea
-      value={editData.content || ""}
-      onChange={(e) => handleInputChange("content", e.target.value)}
-      className="w-full bg-gray-800 text-white px-3 py-2 rounded border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-      rows="15"
-      placeholder="Content (HTML supported)"
-    />
-  ) : (
-    content
-      .split('\n')
-      .filter(p => p.trim() !== '')
-      .map((paragraph, index) => (
-        <p key={index} className="mb-4 leading-relaxed text-gray-300 text-lg">
-          {paragraph.trim()}
-        </p>
-      ))
-  )}
-</div>
-
+              <div className="prose prose-invert max-w-none">
+                {isEditing ? (
+                  <textarea
+                    value={editData.content || ""}
+                    onChange={(e) => handleInputChange("content", e.target.value)}
+                    className="w-full bg-gray-800 text-white px-3 py-2 rounded border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    rows="15"
+                    placeholder="Content (HTML supported)"
+                  />
+                ) : (
+                  content
+                    .split("\n")
+                    .filter((p) => p.trim() !== "")
+                    .map((paragraph, index) => (
+                      <p key={index} className="mb-4 leading-relaxed text-gray-300 text-lg">
+                        {paragraph.trim()}
+                      </p>
+                    ))
+                )}
+              </div>
 
               {!isEditing && (
                 <div className="mt-12">
@@ -423,5 +431,5 @@ export default function LawyerProfilePage({ params }) {
       </div>
       <Footer />
     </div>
-  )
+  );
 }

@@ -56,6 +56,7 @@ export default function FeaturedArticle() {
           src={article.image || '/placeholder.svg'}
           alt={article.title || 'Featured Article'}
           fill
+          unoptimized
           className="object-cover transition-transform duration-500 group-hover:scale-105"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />

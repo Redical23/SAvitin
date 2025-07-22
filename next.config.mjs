@@ -3,6 +3,7 @@ const nextConfig = {
   images: {
     domains: ["media.istockphoto.com",
         "www.hindustantimes.com",
+        "hindustantimes.com"
     ], // ✅ Add your external image host here
   },
   i18n: {
