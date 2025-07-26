@@ -27,7 +27,7 @@ const NEWSTEMP = ({ news }) => {
   return (
     <div className="bg-gradient-to-b from-[#020B2C] to-[#0D1B4A]">
       <main className="max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
-        <motion.div 
+        <motion.div
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -54,12 +54,14 @@ const NEWSTEMP = ({ news }) => {
                     </motion.div>
                   </div>
                   <div className="relative h-48 overflow-hidden">
-                    <Image 
+                    <Image
                       src={newsItem.image || "/placeholder.svg"}
-                      alt={newsItem.title||""}
+                      alt={newsItem.title || ""}
                       fill
-                      className="object-cover transition-transform duration-500 group-hover:scale-110"
+                      className="object-cover"
+                      unoptimized // ⚠️ Skip Next.js optimization for dynamic external URLs
                     />
+
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                   </div>
                 </div>
@@ -74,7 +76,7 @@ const NEWSTEMP = ({ news }) => {
                     <span>{newsItem.date}</span>
                   </div>
 
-                  <motion.h2 
+                  <motion.h2
                     className="text-xl font-semibold mb-3 text-white group-hover:text-blue-400 transition-colors"
                     whileHover={{ x: 5 }}
                   >
@@ -87,7 +89,7 @@ const NEWSTEMP = ({ news }) => {
                 </div>
 
                 <div className="p-6 pt-0 flex items-center justify-between">
-                  <Link 
+                  <Link
                     href={`/newsid/${newsItem._id}`}
                     className="flex items-center gap-2 text-blue-400 hover:text-blue-300 font-medium 
                              transition-all group"

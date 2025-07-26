@@ -1,6 +1,7 @@
 import { Inter } from 'next/font/google';
 import './globals.css';
 import { metadata } from './metadata';
+import { Analytics } from "@vercel/analytics/next"
 import Sessionwarpper from './componets/Sessionwarpper';
 import Contentwapper from './context/Contentwapper';
 import ClientRootLayout from './layout.client'; // 👈 Import the client layout
@@ -26,6 +27,7 @@ export default function RootLayout({ children }) {
         <Sessionwarpper>
           <Contentwapper>
             <ClientRootLayout>{children}</ClientRootLayout>
+             <Analytics />
           </Contentwapper>
         </Sessionwarpper>
       </body>

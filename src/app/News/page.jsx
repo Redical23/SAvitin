@@ -1,12 +1,12 @@
 "use client";
-import React, { useState, useEffect } from 'react';
-import LAHEAD from '../slidebar/LAHEAD';
-import NEWSTEMP from '../templates/NEWSTEMP';
-import FeaturedArticle from '../slidebar/featured-articale';
-import { useModelContext } from '../context/Context';
-import { CategoryFilter } from '../slidebar/category-filter';
-import Footer from '../slidebar/FOOTER';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useEffect } from "react";
+import LAHEAD from "../slidebar/LAHEAD";
+import NEWSTEMP from "../templates/NEWSTEMP";
+import FeaturedArticle from "../slidebar/featured-articale";
+import { useModelContext } from "../context/Context";
+import { CategoryFilter } from "../slidebar/category-filter";
+import Footer from "../slidebar/FOOTER";
+import { motion, AnimatePresence } from "framer-motion";
 
 const Page = () => {
   const [newss, setNewss] = useState([]);
@@ -18,12 +18,12 @@ const Page = () => {
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await fetch('/api/news');
+        const response = await fetch("/api/news");
         const data = await response.json();
         setNewss(data);
         setFilteredUsers(data);
       } catch (error) {
-        console.error('Error fetching news:', error);
+        console.error("Error fetching news:", error);
       } finally {
         setIsLoading(false);
       }
@@ -52,12 +52,12 @@ const Page = () => {
     : [];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#020B2C] to-[#0D1B4A]">
+    <div className="min-h-screen w-full bg-gradient-to-b from-[#020B2C] to-[#0D1B4A] overflow-x-hidden">
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
-        className="container flex-col mx-auto px-4 py-8"
+        className="w-full max-w-6xl mx-auto flex flex-col px-4 py-8"
       >
         <div className="relative z-10 w-full h-auto">
           <FeaturedArticle />
@@ -83,6 +83,7 @@ const Page = () => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.3 }}
+              className="w-full px-2 sm:px-4 mt-6"
             >
               <NEWSTEMP news={selectedUsers} />
             </motion.div>
@@ -94,7 +95,7 @@ const Page = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4 }}
-            className="flex justify-center mt-8 gap-2"
+            className="flex flex-wrap justify-center mt-8 gap-2 px-2"
           >
             {[...Array(totalPages)].map((_, index) => (
               <motion.button

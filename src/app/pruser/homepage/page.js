@@ -1,5 +1,6 @@
 "use client";
 export const dynamic = "force-dynamic";
+
 import React, { Suspense, useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -7,10 +8,8 @@ import FeaturedLawyer from "../../slidebar/feature-lawyer";
 import LAWYERSSTEMP from "../../templates/LAWYERSTEMP";
 import Footer from "../../slidebar/FOOTER";
 
-
 const USERS_PER_PAGE = 9;
 const FILTERS = ["All", "Corporate Law", "Immigration Law", "Family Law", "Criminal Law"];
-
 
 function HomepageContent() {
   const searchParams = useSearchParams();
@@ -41,9 +40,8 @@ function HomepageContent() {
     fetchUsers();
   }, []);
 
-  // Filtered + paginated users
   const filteredUsers = users.filter(user =>
-   selectedFilter && selectedFilter !== "All" ? user.areasOfPractice.includes(selectedFilter) : true
+    selectedFilter && selectedFilter !== "All" ? user.areasOfPractice.includes(selectedFilter) : true
   );
   const totalPages = Math.ceil(filteredUsers.length / USERS_PER_PAGE);
   const start = (page - 1) * USERS_PER_PAGE;
@@ -54,12 +52,12 @@ function HomepageContent() {
   }
 
   return (
-    <div className="min-h-screen min-w-max bg-gradient-to-br from-[#020B2C] to-[#0D1B4A]">
+    <div className="min-h-screen w-full bg-gradient-to-br from-[#020B2C] to-[#0D1B4A] overflow-x-hidden">
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
-        className="w-full max-w-6xl mx-auto flex-col px-4 py-8"
+        className="w-full max-w-6xl mx-auto flex flex-col px-4 py-8"
       >
         <FeaturedLawyer />
 
@@ -98,7 +96,7 @@ function HomepageContent() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.3 }}
-            className="mt-8 w-11/12"
+            className="mt-8 w-full px-2 sm:px-4"
           >
             <LAWYERSSTEMP users={paginatedUsers} />
           </motion.div>

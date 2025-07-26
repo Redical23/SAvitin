@@ -58,109 +58,121 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen">
-      {/* Left Section */}
-      <div className="relative hidden w-1/2 lg:block">
-        <div className="absolute inset-0 bg-gradient-to-b from-blue-500/20 to-blue-500/10">
-          <Image
-            src={loge2 || "/placeholder.svg"}
-            alt="Traveler overlooking mountains"
-            fill
-            className="object-cover"
-            priority
-          />
-        </div>
-        <div className="relative z-10 p-8">
-          <h1 className="text-2xl font-semibold text-white">Kanoonikarwayahi</h1>
-        </div>
+    <div className="flex min-h-screen w-full">
+  {/* Left Section (Only on Desktop) */}
+  <div className="relative hidden w-1/2 lg:block">
+    <div className="absolute inset-0 bg-gradient-to-b from-blue-500/20 to-blue-500/10">
+      <Image
+        src={loge2 || "/placeholder.svg"}
+        alt="Traveler overlooking mountains"
+        fill
+        className="object-cover"
+        priority
+      />
+    </div>
+    <div className="relative z-10 p-8">
+      <h1 className="text-2xl font-semibold text-white">Kanoonikarwayahi</h1>
+    </div>
+  </div>
+
+  {/* Right Section (Form) */}
+  <div suppressHydrationWarning={true} className="relative flex w-full flex-col justify-center px-4 lg:w-1/2 lg:px-8">
+    {/* Mobile background image behind form */}
+    <div className="absolute inset-0 lg:hidden z-0">
+      <Image
+        src={loge2 || "/placeholder.svg"}
+        alt="Traveler overlooking mountains"
+        fill
+        className="object-cover"
+        priority
+      />
+      <div className="absolute inset-0 bg-black/40" /> {/* Optional dark overlay */}
+    </div>
+
+    <div className="relative z-10 mx-auto w-full max-w-md bg-white/90 p-6 rounded-md backdrop-blur-sm lg:bg-transparent">
+      <div className="mb-8">
+        <h2 className="text-3xl font-bold text-[#00A3FF]">Welcome</h2>
+        <p className="text-sm text-gray-500">Login to continue</p>
       </div>
 
-      {/* Right Section */}
-      <div className="flex w-full flex-col justify-center px-4 lg:w-1/2 lg:px-8">
-        <div className="mx-auto w-full max-w-md">
-          <div className="mb-8">
-            <h2 className="text-3xl font-bold text-[#00A3FF]">Welcome</h2>
-            <p className="text-sm text-gray-500">Login to continue</p>
-          </div>
-
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Error Message */}
-            {error && (
-              <div className="rounded-md bg-red-50 border border-red-200 p-3">
-                <div className="flex">
-                  <div className="flex-shrink-0">
-                    <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
-                      <path
-                        fillRule="evenodd"
-                        d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  </div>
-                  <div className="ml-3">
-                    <p className="text-sm text-red-800">{error}</p>
-                  </div>
-                </div>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        {/* Error Message */}
+        {error && (
+          <div className="rounded-md bg-red-50 border border-red-200 p-3">
+            <div className="flex">
+              <div className="flex-shrink-0">
+                <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                  <path
+                    fillRule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                    clipRule="evenodd"
+                  />
+                </svg>
               </div>
-            )}
-
-            {/* Email Input */}
-            <div className="space-y-2">
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                Email
-              </label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                placeholder="your@email.com"
-                value={credentials.email}
-                onChange={handleInputChange}
-                required
-                className={`w-full rounded-md border px-3 py-2 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-1 ${
-                  error
-                    ? "border-red-300 focus:border-red-500 focus:ring-red-500"
-                    : "border-gray-300 focus:border-[#00A3FF] focus:ring-[#00A3FF]"
-                }`}
-              />
+              <div className="ml-3">
+                <p className="text-sm text-red-800">{error}</p>
+              </div>
             </div>
+          </div>
+        )}
 
-            {/* Password Input */}
-            <div className="space-y-2">
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                Password
-              </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                value={credentials.password}
-                onChange={handleInputChange}
-                required
-                className={`w-full rounded-md border px-3 py-2 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-1 ${
-                  error
-                    ? "border-red-300 focus:border-red-500 focus:ring-red-500"
-                    : "border-gray-300 focus:border-[#00A3FF] focus:ring-[#00A3FF]"
-                }`}
-              />
-              <button
-                type="button"
-                onClick={() => router.push("/forgot-password")}
-                className="block text-right text-sm text-[#00A3FF] hover:underline"
-              >
-                Forgot your password?
-              </button>
-            </div>
+        {/* Email Input */}
+        <div className="space-y-2">
+          <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+            Email
+          </label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            placeholder="your@email.com"
+            value={credentials.email}
+            onChange={handleInputChange}
+            required
+            className={`w-full rounded-md border px-3 py-2 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-1 ${
+              error
+                ? "border-red-300 focus:border-red-500 focus:ring-red-500"
+                : "border-gray-300 focus:border-[#00A3FF] focus:ring-[#00A3FF]"
+            }`}
+          />
+        </div>
 
-            {/* Submit Button */}
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="w-full rounded-md bg-[#00A3FF] px-4 py-2 text-sm font-semibold text-white hover:bg-[#0088DD] focus:outline-none focus:ring-2 focus:ring-[#00A3FF] focus:ring-offset-2 disabled:opacity-50"
-            >
-              {isLoading ? "Signing in..." : "Sign in"}
-            </button>
-          </form>
+        {/* Password Input */}
+        <div className="space-y-2">
+          <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+            Password
+          </label>
+          <input
+            id="password"
+            name="password"
+            type="password"
+            value={credentials.password}
+            onChange={handleInputChange}
+            required
+            className={`w-full rounded-md border px-3 py-2 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-1 ${
+              error
+                ? "border-red-300 focus:border-red-500 focus:ring-red-500"
+                : "border-gray-300 focus:border-[#00A3FF] focus:ring-[#00A3FF]"
+            }`}
+          />
+          <button
+            type="button"
+            onClick={() => router.push("/forgot-password")}
+            className="block text-right text-sm text-[#00A3FF] hover:underline"
+          >
+            Forgot your password?
+          </button>
+        </div>
+
+        {/* Submit Button */}
+        <button
+          type="submit"
+          disabled={isLoading}
+          className="w-full rounded-md bg-[#00A3FF] px-4 py-2 text-sm font-semibold text-white hover:bg-[#0088DD] focus:outline-none focus:ring-2 focus:ring-[#00A3FF] focus:ring-offset-2 disabled:opacity-50"
+        >
+          {isLoading ? "Signing in..." : "Sign in"}
+        </button>
+      </form>
 
           {/* Divider */}
           {/* <div className="my-8 flex items-center">

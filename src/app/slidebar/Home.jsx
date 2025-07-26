@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 import { useSession } from "next-auth/react"
 import ImageSlider from "./IMAGESLIDER"
-
+import AdBox from "./AdBox"; 
 // Add global styles for the component
 const globalStyles = {
   fontFamily: "'Poppins', sans-serif",
@@ -82,8 +82,16 @@ const Home = () => {
 
   const [slides, setSlides] = useState([])
   const router = useRouter()
+   const [searchValue, setSearchValue] = useState("");
   const { data: session, status } = useSession()
-
+ 
+  const handleSearch = () => {
+    if (!session) {
+      router.push("/Login");
+    } else {
+      router.push("/pruser/homepage");
+    }
+  };
   const faqData = [
     {
       question: "What are the advantages of hiring remote lawyer?",
@@ -169,19 +177,25 @@ const Home = () => {
               </div>
               <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
                 <div className="relative flex-grow">
-                  <input
-                    type="text"
-                    placeholder="Search by practice area or location"
-                    className="w-full px-4 py-2 rounded-full text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                  <Search className="absolute right-3 top-2.5 text-gray-500" />
-                </div>
-                <button
-                  onClick={() => router.push("/pruser/homepage")}
-                  className="bg-yellow-500 hover:bg-yellow-600 text-blue-900 font-bold py-2 px-6 rounded-full"
-                >
-                  Find Lawyers
-                </button>
+              <input
+          type="text"
+          value={searchValue}
+          onChange={(e) => setSearchValue(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") handleSearch();
+          }}
+          placeholder="Search by practice area or location"
+          className="w-full px-4 py-2 rounded-full text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+        <Search className="absolute right-3 top-2.5 text-gray-500" />
+      </div>
+
+      <button
+        onClick={handleSearch}
+        className="mt-4 bg-yellow-500 hover:bg-yellow-600 text-blue-900 font-bold py-2 px-6 rounded-full"
+      >
+        Find Lawyers
+      </button>
               </div>
             </div>
             <div className="md:w-1/2 flex justify-center">
@@ -403,6 +417,7 @@ const Home = () => {
           </div>
         </div>
       </section>
+            <AdBox/>
     </div>
   )
 }
