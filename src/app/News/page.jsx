@@ -1,124 +1,148 @@
-"use client";
-import React, { useState, useEffect } from "react";
-import LAHEAD from "../slidebar/LAHEAD";
-import NEWSTEMP from "../templates/NEWSTEMP";
-import FeaturedArticle from "../slidebar/featured-articale";
-import { useModelContext } from "../context/Context";
-import { CategoryFilter } from "../slidebar/category-filter";
-import Footer from "../slidebar/FOOTER";
-import { motion, AnimatePresence } from "framer-motion";
+"use client"
 
-const Page = () => {
-  const [newss, setNewss] = useState([]);
-  const [filteredUsers, setFilteredUsers] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [page, setPage] = useState(1);
-  const { searchterm } = useModelContext();
+import { useEffect, useState } from "react"
+import { DealHeader } from "../components/deal-header"
+import { CountdownTimer } from "../components/countdown-timer"
+import { CategoryProductGrid } from "../components/category-product-grid"
+
+const ELECTRONICS_PRODUCTS = [
+  {
+    id: 1,
+    name: '4K Smart TV 55"',
+    price: 299,
+    originalPrice: 699,
+    rating: 4.8,
+    reviews: 2150,
+    image: "/4k-smart-tv.jpg",
+    discount: 57,
+    badge: "Best Seller",
+  },
+  {
+    id: 2,
+    name: "Wireless Headphones Pro",
+    price: 79,
+    originalPrice: 199,
+    rating: 4.7,
+    reviews: 3420,
+    image: "/wireless-headphones.jpg",
+    discount: 60,
+    badge: "Limited Stock",
+  },
+  {
+    id: 3,
+    name: "Gaming Mouse RGB",
+    price: 45,
+    originalPrice: 129,
+    rating: 4.9,
+    reviews: 1890,
+    image: "/gaming-mouse.jpg",
+    discount: 65,
+    badge: "Flash Sale",
+  },
+  {
+    id: 4,
+    name: "Power Bank 30000mAh",
+    price: 25,
+    originalPrice: 69,
+    rating: 4.6,
+    reviews: 5420,
+    image: "/power-bank.jpg",
+    discount: 64,
+    badge: "Top Rated",
+  },
+  {
+    id: 5,
+    name: "USB-C Hub Adapter",
+    price: 35,
+    originalPrice: 89,
+    rating: 4.5,
+    reviews: 1240,
+    image: "/placeholder.svg",
+    discount: 61,
+    badge: "",
+  },
+  {
+    id: 6,
+    name: "Mechanical Keyboard",
+    price: 89,
+    originalPrice: 249,
+    rating: 4.8,
+    reviews: 2890,
+    image: "/placeholder.svg",
+    discount: 64,
+    badge: "",
+  },
+  {
+    id: 7,
+    name: "Wireless Charger Pad",
+    price: 22,
+    originalPrice: 59,
+    rating: 4.4,
+    reviews: 3120,
+    image: "/placeholder.svg",
+    discount: 63,
+    badge: "",
+  },
+  {
+    id: 8,
+    name: "4K Webcam",
+    price: 119,
+    originalPrice: 349,
+    rating: 4.7,
+    reviews: 1560,
+    image: "/placeholder.svg",
+    discount: 66,
+    badge: "",
+  },
+]
+
+export default function ElectronicsPage() {
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    async function fetchData() {
-      try {
-        const response = await fetch("/api/news");
-        const data = await response.json();
-        setNewss(data);
-        setFilteredUsers(data);
-      } catch (error) {
-        console.error("Error fetching news:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    }
+    const timer = setTimeout(() => setIsLoading(false), 500)
+    return () => clearTimeout(timer)
+  }, [])
 
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    if (searchterm.length > 2) {
-      const filtered = newss.filter((newsItem) =>
-        newsItem.headline.toLowerCase().includes(searchterm.toLowerCase())
-      );
-      setFilteredUsers(filtered);
-    } else {
-      setFilteredUsers(newss);
-    }
-    setPage(1);
-  }, [searchterm, newss]);
-
-  const usersPerPage = 9;
-  const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
-  const startIndex = (page - 1) * usersPerPage;
-  const selectedUsers = Array.isArray(filteredUsers)
-    ? filteredUsers.slice(startIndex, startIndex + usersPerPage)
-    : [];
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-950 flex items-center justify-center">
+        <div className="text-white text-lg font-semibold">Loading electronics...</div>
+      </div>
+    )
+  }
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-b from-[#020B2C] to-[#0D1B4A] overflow-x-hidden">
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5 }}
-        className="w-full max-w-6xl mx-auto flex flex-col px-4 py-8"
-      >
-        <div className="relative z-10 w-full h-auto">
-          <FeaturedArticle />
+    <main className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-950">
+   
+
+      <section className="px-4 py-8 max-w-7xl mx-auto">
+        <div className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg p-8 mb-12 text-white shadow-2xl">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-8">
+            <div>
+              <h1 className="text-4xl md:text-5xl font-bold mb-2 text-balance">Electronics & Gadgets</h1>
+              <p className="text-lg text-blue-50 text-pretty">High-tech deals on the latest gadgets and electronics</p>
+            </div>
+            <CountdownTimer />
+          </div>
         </div>
 
-        <motion.div
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.2 }}
-        >
-          <CategoryFilter setFilteredUsers={setFilteredUsers} newss={newss} />
-        </motion.div>
+        <div className="mb-12">
+          <h2 className="text-3xl font-bold text-white mb-8">Top Electronics Deals</h2>
+          <CategoryProductGrid products={ELECTRONICS_PRODUCTS} />
+        </div>
 
-        {isLoading ? (
-          <div className="flex items-center justify-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-          </div>
-        ) : (
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={page}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.3 }}
-              className="w-full px-2 sm:px-4 mt-6"
-            >
-              <NEWSTEMP news={selectedUsers} />
-            </motion.div>
-          </AnimatePresence>
-        )}
+        <div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg p-6 text-center mb-12">
+          <p className="text-white text-xl font-semibold">All Electronics 40-70% OFF</p>
+          <p className="text-blue-100 text-sm mt-2">Exclusive online deals - Free shipping on orders above $50</p>
+        </div>
 
-        {totalPages > 1 && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.4 }}
-            className="flex flex-wrap justify-center mt-8 gap-2 px-2"
-          >
-            {[...Array(totalPages)].map((_, index) => (
-              <motion.button
-                key={index}
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-                className={`w-10 h-10 rounded-lg transition-all ${
-                  page === index + 1
-                    ? "bg-blue-600 text-white shadow-lg"
-                    : "bg-white/10 text-gray-300 hover:bg-white/20"
-                }`}
-                onClick={() => setPage(index + 1)}
-              >
-                {index + 1}
-              </motion.button>
-            ))}
-          </motion.div>
-        )}
-      </motion.div>
-
-      <Footer />
-    </div>
-  );
-};
-
-export default Page;
+        <div className="text-center pb-16">
+          <button className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-8 py-4 rounded-full text-lg font-bold transition-all transform hover:scale-105 shadow-lg">
+            View All Electronics
+          </button>
+        </div>
+      </section>
+    </main>
+  )
+}

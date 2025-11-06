@@ -22,8 +22,8 @@ const LAHEAD = () => {
           href="/pruser/homepage"
           className="text-3xl font-extrabold bg-gradient-to-r from-yellow-400 to-red-400 bg-clip-text text-transparent hover:scale-105 transition-transform duration-300 ease-in-out shadow-md hover:shadow-lg"
         >
-          KANOONI KARWAYAHI
-        </Link>
+       SHOPHUB
+         </Link>
 
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center space-x-8">

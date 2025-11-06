@@ -2,9 +2,9 @@
 import React from "react";
 import "./globals.css";
 import Script from "next/script";
-import HomeComponent from "./slidebar/Home";
-import { useModelContext } from "./context/Context";
 
+import { useModelContext } from "./context/Context";
+import MAINpage from "../app/homepage/MAINpage"
 export default function Home() {
     const { isSignedUp } = useModelContext();
     
@@ -20,7 +20,7 @@ export default function Home() {
         strategy="afterInteractive"
       />
         <div  > 
-            <HomeComponent />
+           <MAINpage/>
           
         </div>
         </>

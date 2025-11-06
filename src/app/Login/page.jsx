@@ -182,7 +182,7 @@ export default function LoginPage() {
           </div> */}
 
           {/* Social Logins */}
-          {/* <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-3 gap-3">
             <button
               onClick={() => signIn("google", { callbackUrl: "/pruser/homepage" })}
               className="flex items-center justify-center rounded-md border border-gray-300 bg-white p-2 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#00A3FF] focus:ring-offset-2"
@@ -206,7 +206,7 @@ export default function LoginPage() {
                 />
               </svg>
             </button>
-          </div> */}
+          </div>
 
           {/* Register */}
           <div className="mt-8 text-center text-sm text-gray-500">

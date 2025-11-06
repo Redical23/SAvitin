@@ -5,12 +5,12 @@ import { usePathname } from 'next/navigation';
 
 const Navigation = () => {
     const navItems = [
-        { name: 'Home', href: '/pruser/homepage' },
-        { name: 'Chartered Accountant', href: '/pruser/CA' },
-        { name: 'News', href: '/News' },
-        { name: 'Constitution', href: '/Constitustion' },
-        { name: 'Internship', href: '/pruser/internship' },
-        { name: 'Chats', href: '/lawyer/chats' },
+        { name: 'Home', href: '/' },
+        { name: 'Todays deal', href: '/pruser/CA' },
+        { name: 'ELECTRONIC', href: '/News' },
+        { name: 'Home&kitchen', href: '/Constitustion' },
+        { name: 'Fashion', href: '/pruser/internship' },
+        { name: 'News releases', href: '/lawyer/chats' },
     ];
 
     const pathname = usePathname();
@@ -38,3 +38,4 @@ const Navigation = () => {
 };
 
 export default Navigation;
+    
