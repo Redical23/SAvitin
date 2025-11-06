@@ -14,6 +14,7 @@
     "accept-language": "^3.0.20",
     "bcryptjs": "^3.0.0",
     "chart.js": "^4.4.7",
+    "clsx": "^2.1.1",
     "formidable": "^3.5.4",
     "framer-motion": "^12.4.3",
     "i18next": "^25.0.2",
@@ -34,7 +35,8 @@
     "react-image-crop": "^11.0.7",
     "socket.io": "^4.8.1",
     "socket.io-client": "^4.8.1",
-    "sonner": "^1.7.4"
+    "sonner": "^1.7.4",
+    "tailwind-merge": "^3.3.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
