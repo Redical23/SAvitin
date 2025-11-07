@@ -10,7 +10,7 @@ const Navigation = () => {
         { name: 'ELECTRONIC', href: '/News' },
         { name: 'Home&kitchen', href: '/Constitustion' },
         { name: 'Fashion', href: '/pruser/internship' },
-        { name: 'News releases', href: '/lawyer/chats' },
+        { name: 'New releases', href: '/lawyer/chats' },
     ];
 
     const pathname = usePathname();

@@ -204,7 +204,7 @@ export default function SettingsPage() {
           >
             <SIGNOUT />
           </motion.div>
-          {/* islaywer Toggle Button */}
+          {/* islaywer Toggle Button
           <motion.div
             initial={{ x: -20, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
@@ -216,7 +216,7 @@ export default function SettingsPage() {
             >
               {isLaywer ? "Deactivate Lawyer Mode" : "Activate Lawyer Mode"}
             </button>
-          </motion.div>
+          </motion.div> */}
         </div>
       </motion.div>
       <Footer />
