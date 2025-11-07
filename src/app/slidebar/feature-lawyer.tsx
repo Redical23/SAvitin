@@ -1,4 +1,5 @@
 "use client"
+
 import { useState, useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
@@ -22,68 +23,23 @@ interface Product {
 export default function FeaturedProducts() {
   const [products, setProducts] = useState<Product[]>([])
   const [wishlist, setWishlist] = useState<Set<string>>(new Set())
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    const staticProducts: Product[] = [
-      {
-        _id: "1",
-        name: "Noise ColorFit Pro 4 Smartwatch",
-        category: "Electronics",
-        price: 2999,
-        originalPrice: 4999,
-        discount: true,
-        image: "/watch.jpg",
-        featured: true,
-        rating: 4.5,
-        reviews: 328,
-        stock: 45,
-        badge: "Best Seller",
-      },
-      {
-        _id: "2",
-        name: "boAt Rockerz 450 Bluetooth Headphones",
-        category: "Audio",
-        price: 1599,
-        originalPrice: 3490,
-        discount: true,
-        image: "/headphone.jpg",
-        featured: true,
-        rating: 4.3,
-        reviews: 512,
-        stock: 82,
-        badge: "Hot Deal",
-      },
-      {
-        _id: "3",
-        name: "ASUS Vivobook 15 Laptop (i5 12th Gen)",
-        category: "Computers",
-        price: 49990,
-        originalPrice: 63990,
-        discount: true,
-        image: "/asusvivobook.jpg",
-        featured: true,
-        rating: 4.7,
-        reviews: 195,
-        stock: 12,
-        badge: "Limited",
-      },
-      {
-        _id: "4",
-        name: "OnePlus Nord CE 3 Lite 5G (8GB RAM, 128GB)",
-        category: "Mobiles",
-        price: 19999,
-        originalPrice: 22999,
-        discount: true,
-        image: "/h7.jpg",
-        featured: true,
-        rating: 4.6,
-        reviews: 847,
-        stock: 156,
-        badge: "New",
-      },
-    ]
-
-    setTimeout(() => setProducts(staticProducts), 500)
+    async function fetchData() {
+      try {
+        const response = await fetch("/api/news") // ✅ fetch from your backend route
+        if (!response.ok) throw new Error("Failed to fetch products")
+        const data = await response.json()
+        setProducts(data)
+      } catch (error) {
+        console.error("Error fetching products:", error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+console.log(products)
+    fetchData()
   }, [])
 
   const toggleWishlist = (productId: string) => {
@@ -98,9 +54,8 @@ export default function FeaturedProducts() {
     })
   }
 
-  const getDiscountPercentage = (price: number, originalPrice: number) => {
-    return Math.round(((originalPrice - price) / originalPrice) * 100)
-  }
+  const getDiscountPercentage = (price: number, originalPrice: number) =>
+    Math.round(((originalPrice - price) / originalPrice) * 100)
 
   const getBadgeColor = (badge?: string) => {
     switch (badge) {
@@ -117,7 +72,8 @@ export default function FeaturedProducts() {
     }
   }
 
-  if (products.length === 0) {
+  // ⏳ Loading skeleton
+  if (isLoading) {
     return (
       <div className="bg-white p-6 rounded-lg shadow-lg">
         <div className="flex justify-between items-center mb-6">
@@ -132,6 +88,16 @@ export default function FeaturedProducts() {
     )
   }
 
+  // 🧾 No products fallback
+  if (products.length === 0) {
+    return (
+      <div className="bg-white p-6 rounded-lg shadow-lg text-center text-gray-500">
+        No featured products found.
+      </div>
+    )
+  }
+
+  // 🛍️ Render products
   return (
     <div className="bg-white p-6 rounded-lg shadow-lg">
       <div className="flex justify-between items-center mb-6">
@@ -143,14 +109,15 @@ export default function FeaturedProducts() {
           href="/products"
           className="text-orange-600 hover:text-orange-700 font-semibold flex items-center gap-2 transition-colors"
         >
-          View All
-          <span>→</span>
+          View All <span>→</span>
         </Link>
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-        {products.map((product) => {
-          const discountPercent = product.discount ? getDiscountPercentage(product.price, product.originalPrice) : 0
+       {products.slice(0, 5).map((product) => {
+          const discountPercent = product.discount
+            ? getDiscountPercentage(product.price, product.originalPrice)
+            : 0
           const isLowStock = product.stock && product.stock < 20
 
           return (
@@ -168,7 +135,9 @@ export default function FeaturedProducts() {
 
                 {product.badge && (
                   <div
-                    className={`absolute top-2 left-2 ${getBadgeColor(product.badge)} text-white text-xs px-2 py-1 rounded-full font-semibold flex items-center gap-1`}
+                    className={`absolute top-2 left-2 ${getBadgeColor(
+                      product.badge
+                    )} text-white text-xs px-2 py-1 rounded-full font-semibold flex items-center gap-1`}
                   >
                     {product.badge === "Hot Deal" && <Zap className="w-3 h-3" />}
                     {product.badge}
@@ -194,7 +163,9 @@ export default function FeaturedProducts() {
                 >
                   <Heart
                     className={`w-5 h-5 transition-colors ${
-                      wishlist.has(product._id) ? "fill-red-500 text-red-500" : "text-gray-600"
+                      wishlist.has(product._id)
+                        ? "fill-red-500 text-red-500"
+                        : "text-gray-600"
                     }`}
                   />
                 </button>
@@ -211,7 +182,9 @@ export default function FeaturedProducts() {
                       <Star
                         key={i}
                         className={`w-3.5 h-3.5 ${
-                          i < Math.floor(product.rating || 0) ? "fill-yellow-400 text-yellow-400" : "text-gray-300"
+                          i < Math.floor(product.rating || 0)
+                            ? "fill-yellow-400 text-yellow-400"
+                            : "text-gray-300"
                         }`}
                       />
                     ))}
@@ -220,7 +193,9 @@ export default function FeaturedProducts() {
                 </div>
 
                 <div className="mt-2 flex items-baseline gap-2">
-                  <span className="text-lg font-bold text-green-600">₹{product.price.toLocaleString()}</span>
+                  <span className="text-lg font-bold text-green-600">
+                    ₹{product.price.toLocaleString()}
+                  </span>
                   {product.discount && (
                     <span className="text-xs line-through text-gray-400">
                       ₹{product.originalPrice.toLocaleString()}

@@ -7,163 +7,40 @@ import { CategoryProductGrid } from "../components/category-product-grid"
 import { Zap, Filter } from "lucide-react"
 import Featuredlawyer from "../slidebar/feature-lawyer"
 import Footer from "../slidebar/FOOTER"
+
 const ITEMS_PER_PAGE = 12
 const FILTER_OPTIONS = ["All", "Best Seller", "New Release", "Hot Deal", "Limited Stock", "On Sale"]
 
-interface Product {
-  id: number
-  name: string
-  category: string
-  price: number
-  originalPrice: number
-  rating: number
-  reviews: number
-  image: string
-  discount: number
-  badge: string
-  stock?: number
-}
-
-const SAMPLE_PRODUCTS: Product[] = [
-  {
-    id: 1,
-    name: "Premium Wireless Headphones",
-    category: "Best Seller",
-    price: 2499,
-    originalPrice: 5999,
-    rating: 4.8,
-    reviews: 1240,
-    image: "/wireless-headphones.jpg",
-    discount: 58,
-    badge: "Best Seller",
-    stock: 45,
-  },
-
-  {
-    id: 3,
-    name: "4K Ultra HD Camera",
-    category: "Hot Deal",
-    price: 8999,
-    originalPrice: 24999,
-    rating: 4.9,
-    reviews: 2100,
-    image: "/camara.jpg",
-    discount: 64,
-    badge: "Hot Deal",
-    stock: 156,
-  },
-  {
-    id: 4,
-    name: "Portable Power Bank 20000mAh",
-    category: "On Sale",
-    price: 999,
-    originalPrice: 2499,
-    rating: 4.5,
-    reviews: 560,
-    image: "/power-bank.jpg",
-    discount: 60,
-    badge: "",
-    stock: 89,
-  },
-  {
-    id: 5,
-    name: "Premium Mechanical Keyboard RGB",
-    category: "Best Seller",
-    price: 3499,
-    originalPrice: 7999,
-    rating: 4.7,
-    reviews: 420,
-    image: "/keyborad.jpg",
-    discount: 56,
-    badge: "Best Seller",
-    stock: 5,
-  },
-  {
-    id: 6,
-    name: "Ultra-Thin Laptop Stand",
-    category: "New Release",
-    price: 1299,
-    originalPrice: 2999,
-    rating: 4.4,
-    reviews: 650,
-    image: "/laptopstand.jpg",
-    discount: 57,
-    badge: "New Release",
-    stock: 200,
-  },
-  {
-    id: 7,
-    name: "Wireless Mouse Pro",
-    category: "Best Seller",
-    price: 799,
-    originalPrice: 1999,
-    rating: 4.6,
-    reviews: 1560,
-    image: "/mouse.jpg",
-    discount: 60,
-    badge: "",
-    stock: 120,
-  },
-  {
-    id: 8,
-    name: "USB-C Hub Adapter 7-in-1",
-    category: "Hot Deal",
-    price: 1499,
-    originalPrice: 3499,
-    rating: 4.5,
-    reviews: 2340,
-    image: "/usb.jpg",
-    discount: 57,
-    badge: "Hot Deal",
-    stock: 34,
-  },
-  {
-    id: 9,
-    name: "Desk Lamp LED Smart",
-    category: "Limited Stock",
-    price: 1899,
-    originalPrice: 4499,
-    rating: 4.7,
-    reviews: 890,
-    image: "/lap.jpg",
-    discount: 58,
-    badge: "Limited Stock",
-    stock: 8,
-  },
-
-  {
-    id: 11,
-    name: "Premium HDMI Cable 2.1",
-    category: "Best Seller",
-    price: 499,
-    originalPrice: 1299,
-    rating: 4.8,
-    reviews: 1200,
-    image: "/usb.jpg",
-    discount: 62,
-    badge: "Best Seller",
-    stock: 450,
-  },
-
-]
-
 function ProductPageContent() {
-  const [products, setProducts] = useState<Product[]>([])
+  const [products, setProducts] = useState([])
   const [selectedFilter, setSelectedFilter] = useState("All")
   const [currentPage, setCurrentPage] = useState(1)
   const [isLoading, setIsLoading] = useState(true)
   const [showMobileFilter, setShowMobileFilter] = useState(false)
 
+  // ✅ Updated: Fetch data from /api/products
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setProducts(SAMPLE_PRODUCTS)
-      setIsLoading(false)
-    }, 300)
-    return () => clearTimeout(timer)
+    async function fetchData() {
+      try {
+        const response = await fetch("/api/news") // fetch from backend route
+        if (!response.ok) throw new Error("Failed to fetch products")
+        const data = await response.json()
+        setProducts(data)
+      } catch (error) {
+        console.error("Error fetching products:", error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    fetchData()
   }, [])
 
+  // ✅ Filtering logic
   const filteredProducts = products.filter(
-    (product) => selectedFilter === "All" || product.category === selectedFilter || product.badge === selectedFilter,
+    (product) =>
+      selectedFilter === "All" ||
+      product.category === selectedFilter ||
+      product.badge === selectedFilter
   )
 
   const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE)
@@ -172,8 +49,9 @@ function ProductPageContent() {
 
   return (
     <>
-     <LAHEAD/>
-     <Featuredlawyer/>
+      <LAHEAD />
+      <Featuredlawyer />
+
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
         <div className="bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-800 text-white px-4 py-12 md:py-16">
           <div className="max-w-7xl mx-auto">
@@ -190,6 +68,7 @@ function ProductPageContent() {
         </div>
 
         <div className="max-w-7xl mx-auto px-4 py-12">
+          {/* Filter Bar */}
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -269,6 +148,7 @@ function ProductPageContent() {
             </AnimatePresence>
           )}
 
+          {/* Pagination */}
           {totalPages > 1 && (
             <div className="mt-12 flex justify-center items-center gap-4">
               <motion.button
@@ -312,7 +192,7 @@ function ProductPageContent() {
           )}
         </div>
       </div>
-      <Footer/>
+      <Footer />
     </>
   )
 }

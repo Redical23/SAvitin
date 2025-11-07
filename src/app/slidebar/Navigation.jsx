@@ -7,10 +7,10 @@ const Navigation = () => {
     const navItems = [
         { name: 'Home', href: '/' },
         { name: 'Todays deal', href: '/pruser/CA' },
-        { name: 'ELECTRONIC', href: '/News' },
-        { name: 'Home&kitchen', href: '/Constitustion' },
-        { name: 'Fashion', href: '/pruser/internship' },
-        { name: 'New releases', href: '/lawyer/chats' },
+        { name: 'ELECTRONIC', href: '/Electronics' },
+        { name: 'Home&kitchen', href: '/Homekitchen' },
+        { name: 'Fashion', href: '/Fashion' },
+        { name: 'New releases', href: '/Newreleases' },
     ];
 
     const pathname = usePathname();

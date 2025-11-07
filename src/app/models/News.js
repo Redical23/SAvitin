@@ -1,37 +1,52 @@
 import mongoose from 'mongoose';
 
 const NewsSchema = new mongoose.Schema({
-  headline: {
+    name: {
     type: String,
     required: true,
-  },
-  description: {
-    type: String,
-    required: true,
-  },
-  content: {
-    type: String,
-  },
-  date: {
-    type: String,
-    required: true,
-  },
-  image: {
-    type: String,
   },
   category: {
     type: String,
     required: true,
   },
-  readTime: {
-    type: String,
+  price: {
+    type: Number,
+    required: true,
   },
-  role: {
-    type: String,
+  originalPrice: {
+    type: Number,
+    required: true,
   },
-  feature: {
+  discount: {
     type: Boolean,
-   default: false,
+    default: false,
+  },
+  image: {
+    type: String,
+    required: true,
+  },
+  featured: {
+    type: Boolean,
+    default: false,
+  },
+  rating: {
+    type: Number,
+    default: 0,
+  },
+  reviews: {
+    type: Number,
+    default: 0,
+  },
+  stock: {
+    type: Number,
+    default: 0,
+  },
+  badge: {
+    type: String,
+  },
+  dateAdded: {
+    type: Date,
+    default: Date.now,
   },
 });
 

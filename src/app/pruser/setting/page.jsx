@@ -12,8 +12,8 @@ import Footer from "../../slidebar/FOOTER"
 
 const defaultSettingsOptions = [
   { name: "Edit Profile", href: "/pruser/editprofile" },
-  { name: "Bookmarks", href: "/pruser/bookmark" },
-  { name: "Posts", href: "/pruser/posts" },
+  { name: "Cart", href: "/pruser/Cart" },
+  { name: "Order", href: "/pruser/Order" },
   { name: "Insights", href: "/pruser/insights" },
   { name: "Change Password", href: "/pruser/changepassword" },
   { name: "Subscription", href: "#" },
