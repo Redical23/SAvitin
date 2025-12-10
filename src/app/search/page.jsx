@@ -1,44 +1,40 @@
 "use client";
 
-export const dynamic = "force-dynamic";
-export const dynamicParams = true;
-export const fetchCache = "force-no-store";
-export const revalidate = 0;
+import { Suspense } from "react";
+import { useSearchParams } from "next/navigation";
+import DynamicHeader from "../components/dynamic-header";
+import Footer from "../components/footer";
 
-import { useSearchParams } from "next/navigation"
-import DynamicHeader from "../components/dynamic-header"
-import Footer from "../components/footer"
+import { hotelListings } from "../data/hotels";
+import { travelListings } from "../data/travel";
+import { restaurantListings } from "../data/restaurants";
+import { eventListings } from "../data/events";
 
-import { hotelListings } from "../data/hotels"
-import { travelListings } from "../data/travel"
-import { restaurantListings } from "../data/restaurants"
-import { eventListings } from "../data/events"
+function SearchContent() {
+  const searchParams = useSearchParams();
+  const query = searchParams.get("query")?.toLowerCase() || "";
 
-export default function SearchPage() {
-  const searchParams = useSearchParams()
-  const query = searchParams.get("query")?.toLowerCase() || ""
-
-  const queryWords = query.split(" ").filter(Boolean)
+  const queryWords = query.split(" ").filter(Boolean);
 
   const allData = [
     ...hotelListings,
     ...travelListings,
     ...restaurantListings,
     ...eventListings,
-  ]
+  ];
 
   const results = allData.filter((item) => {
-    const name = item.name.toLowerCase()
-    const location = item.location?.toLowerCase() || ""
-    const typeOrCuisine = (item.type || item.cuisine || "").toLowerCase()
+    const name = item.name.toLowerCase();
+    const location = item.location?.toLowerCase() || "";
+    const typeOrCuisine = (item.type || item.cuisine || "").toLowerCase();
 
     return queryWords.some(
       (word) =>
         name.includes(word) ||
         location.includes(word) ||
         typeOrCuisine.includes(word)
-    )
-  })
+    );
+  });
 
   return (
     <>
@@ -63,9 +59,14 @@ export default function SearchPage() {
                   className="w-full h-48 rounded-xl object-cover mb-4"
                 />
 
-                <h2 className="text-xl text-white font-semibold">{item.name}</h2>
+                <h2 className="text-xl text-white font-semibold">
+                  {item.name}
+                </h2>
+
                 <p className="text-slate-400 text-sm">{item.location}</p>
-                <p className="text-cyan-400 text-sm">{item.type || item.cuisine}</p>
+                <p className="text-cyan-400 text-sm">
+                  {item.type || item.cuisine}
+                </p>
               </div>
             ))}
           </div>
@@ -74,5 +75,13 @@ export default function SearchPage() {
 
       <Footer />
     </>
-  )
+  );
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense>
+      <SearchContent />
+    </Suspense>
+  );
 }
