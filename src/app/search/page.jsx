@@ -1,6 +1,9 @@
 "use client";
 
-export const dynamic = "force-dynamic"
+export const dynamic = "force-dynamic";
+export const dynamicParams = true;
+export const fetchCache = "force-no-store";
+export const revalidate = 0;
 
 import { useSearchParams } from "next/navigation"
 import DynamicHeader from "../components/dynamic-header"
