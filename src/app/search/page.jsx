@@ -1,4 +1,5 @@
-"use client"
+"use client";
+
 export const dynamic = "force-dynamic"
 
 import { useSearchParams } from "next/navigation"
@@ -29,9 +30,9 @@ export default function SearchPage() {
     const typeOrCuisine = (item.type || item.cuisine || "").toLowerCase()
 
     return queryWords.some(
-      (word) => 
-        name.includes(word) || 
-        location.includes(word) || 
+      (word) =>
+        name.includes(word) ||
+        location.includes(word) ||
         typeOrCuisine.includes(word)
     )
   })
