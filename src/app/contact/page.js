@@ -149,7 +149,7 @@ export default function ContactPage() {
           <div className="mt-16 pt-8 border-t border-gray-300">
             <p className="text-sm font-medium text-gray-600 uppercase tracking-wide mb-2">Email Us</p>
             <a href="mailto:kanoonikarwayahi@gmail.com" className="text-gray-800 hover:text-gray-600 transition-colors">
-              kanoonikarwayahi@gmail.com
+              ksdsdsi@gmail.com
             </a>
           </div>
         </div>
